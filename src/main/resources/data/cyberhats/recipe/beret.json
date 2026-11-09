@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:red_wool",
+    "minecraft:red_wool",
+    "minecraft:string"
+  ],
+  "result": {
+    "id": "cyberhats:beret"
+  }
+}

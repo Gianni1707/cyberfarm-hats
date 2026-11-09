@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:feather",
+    "minecraft:feather",
+    "minecraft:egg",
+    "minecraft:white_wool"
+  ],
+  "result": {
+    "id": "cyberhats:chicken_hat"
+  }
+}

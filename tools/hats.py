@@ -6,11 +6,13 @@ knit ribs...), plus small pixel drawings ("decals") on chosen faces. Two texels 
 How a hat must be built:
 - centred on x = z = 8, standing on y = 0 and never below it, north (-z) is the face side;
 - its lowest 3.5 units cover the square from 0.5 to 15.5: on a player the hat is pulled 2.4 units down over the
-  head (12.8 units wide, 14.4 with the skin's outer layer), which must not show through;
+  head (12.8 units wide, 14.4 with the skin's outer layer), which must not show through. Only what sits on the
+  head rather than over it (a halo, a chicken) leaves it bare;
 - on a drone it stands on the tank at 0.27 pixels per unit, with every module below it.
 """
 import json
 import math
+import re
 import struct
 import zlib
 from pathlib import Path
@@ -23,6 +25,7 @@ HATS = []
 FACES = {"n": "north", "s": "south", "e": "east", "w": "west", "u": "up", "d": "down"}
 STITCH = (58, 42, 32)
 PANELS = ["#d22b2b", "#f2c318", "#2b4bbd", "#2e8b3d"]
+PARTY = ["#ff5fa2", "#3fc6e8", "#ffd23f"]
 
 
 class Hat:
@@ -135,6 +138,28 @@ def texel(material, face, point, i, j, w, h):
         turn = (math.atan2(z - 8, x - 8) + math.pi) / (2 * math.pi)
         colour = PANELS[math.floor(turn * 8 + 0.5) % 4]
         k = 0.92 + 0.12 * noise
+    elif pattern == "zigzag":
+        # Mexican band: red, with green and white teeth along it
+        tooth = abs(along % 6 - 3)
+        colour = "#2e8b3d" if j < tooth - 0.5 else "#f4f1e6" if j == h - 1 else colour
+        k = 0.94 + 0.08 * noise
+    elif pattern == "party":
+        colour = PARTY[((along + across) // 3) % 3]
+        k = 0.96 + 0.06 * noise
+    elif pattern == "spots":
+        a, b = (along, across) if side else (qx, qz)
+        cell = (a // 6, b // 6, face)
+        # A round 4x4 dot (corners left out) in some of the 6x6 cells
+        spot = grain(*cell) > 0.5 and 1 <= a % 6 <= 4 and 1 <= b % 6 <= 4 and not (a % 6 in (1, 4) and b % 6 in (1, 4))
+        colour = "#f6f1e4" if spot else colour
+        k = 0.94 + 0.08 * noise
+    elif pattern == "lames":
+        # Lacquered plates laced with red cord
+        if j % 3 == 2 or (j % 3 == 1 and along % 4 == 0):
+            return rgb("#a52a24") + (255,)
+        k = 0.9 + 0.1 * noise + (0.14 if j % 3 == 0 else 0.0)
+    elif pattern == "glow":
+        k = 1.0
     if side and h >= 4 and j == h - 1:
         k *= 0.88   # shadow where a part meets the one below
     return tuple(max(0, min(255, round(c * k))) for c in rgb(colour)) + (255,)
@@ -200,6 +225,8 @@ def build(hat):
         element = {"from": list(bounds[:3]), "to": list(bounds[3:]), "faces": {}}
         if rot:
             element["rotation"] = {"origin": list(rot[2]), "axis": rot[0], "angle": rot[1]}
+        if material and material[1] == "glow":
+            element["light_emission"] = 15
         for letter in sides:
             x, y, w, h = placed[index, FACES[letter]]
             # A hair inside the rectangle, so its neighbours never bleed in
@@ -425,9 +452,360 @@ def propeller_beanie():
     h.mid(1.75, 1.75, 8.3, 9.1, ("#2b4bbd", "plastic"))
 
 
+SKULL = ("...WWWWWW... ..WWWWWWWW.. .WWWWWWWWWW. .WWKKWWKKWW. .WWKKWWKKWW. .WWWWKKWWWW. ..WWWWWWWW.. "
+         "...W.WW.W... W.........W. .WW......WW. ...WW..WW... .WW......WW. W..........W")
+
+
+def pirate_hat():
+    h = Hat("pirate_hat", "Pirate Hat", shaped("WWW", "WBW", W="minecraft:black_wool", B="minecraft:bone"))
+    black, gold = ("#1b1a1f", "felt"), ("#d9a830", "gold")
+    h.mid(15, 15, 0, 3.5, black)
+    # A bicorne: a tall crescent across the head, its two ends drooping over the ears
+    h.mid(24, 7, 3.5, 7, black)
+    h.mid(19, 7, 7, 10, black)
+    h.mid(13, 6.5, 10, 12.5, black)
+    h.mid(7, 6, 12.5, 13.5, black)
+    h.mid(4, 6, 0.5, 3.5, black, dx=-11)
+    h.mid(4, 6, 0.5, 3.5, black, dx=11)
+    # Gold edging along the outline, front and back
+    for width, top in ((24, 7), (19, 10), (13, 12.5), (7, 13.5)):
+        for dz in (-3.5, 3.5):
+            h.mid(width + 0.5, 0.5, top - 0.75, top, gold, dz=dz)
+    h.box(2, 4.25, 4.3, 14, 10.75, 4.5, None, faces="n", tag="skull")
+    h.decal("skull", "north", 6, 0, SKULL, W="#ecebe4", K="#1b1a1f")
+
+
+def sombrero():
+    h = Hat("sombrero", "Sombrero", shaped(" H ", "WGW", H="minecraft:hay_block", W="minecraft:wheat", G="minecraft:green_dye"))
+    straw = ("#dcb35a", "straw")
+    h.brim(31, 0, 0.75, straw)
+    h.brim(27, 0.75, 1.25, straw)
+    h.mid(15, 15, 1.25, 5, straw)
+    h.mid(15.5, 15.5, 1.25, 3.75, ("#c8202c", "zigzag"))
+    h.mid(13, 13, 5, 8.5, straw)
+    h.mid(10, 10, 8.5, 11, straw)
+    h.mid(6.5, 6.5, 11, 12.5, straw)
+
+
+def fedora():
+    h = Hat("fedora", "Fedora", shaped(" B ", "BKB", B="minecraft:brown_wool", K="minecraft:black_carpet"))
+    felt = ("#6a5240", "felt")
+    h.brim(21, 0, 0.75, felt)
+    h.mid(15, 15, 0.75, 6, felt)
+    h.mid(15.5, 15.5, 0.75, 2.5, ("#1b1a1f", "cloth"))
+    h.mid(13, 14, 6, 7.5, felt)
+    h.mid(4, 12, 7.5, 8.5, felt, dx=-4)                  # the crown pinched along its top
+    h.mid(4, 12, 7.5, 8.5, felt, dx=4)
+    h.mid(1, 1, 1, 2.25, ("#c94a3a", "cloth"), dx=7.9, dz=-3)   # a feather's tip in the band
+
+
+def beret():
+    h = Hat("beret", "Beret", shapeless("minecraft:red_wool", "minecraft:red_wool", "minecraft:string"))
+    red = ("#b0202a", "felt")
+    h.mid(15, 15, 0, 3.5, red)
+    h.mid(19, 19, 3.5, 5, red, rot=("z", 9, (8, 3.5, 8)))      # the flat top, worn to one side
+    h.mid(16, 16, 5, 5.75, red, rot=("z", 9, (8, 3.5, 8)))
+    h.mid(1, 1, 5.5, 6.75, red, dx=-0.5)
+
+
+def ushanka():
+    h = Hat("ushanka", "Ushanka", shaped("HHH", "HWH", H="minecraft:rabbit_hide", W="minecraft:brown_wool"))
+    fur, top = ("#7a5636", "fur"), ("#3d2c22", "leather")
+    h.mid(15, 15, 0, 6, top)
+    h.mid(13.5, 13.5, 6, 7.5, top)
+    # The flaps, tied up: the front over the forehead, the sides over the ears, the back
+    h.box(0.5, 0.5, -1, 15.5, 6.5, 1, fur)
+    h.box(-1, 1.5, 1, 1, 7, 15, fur)
+    h.box(15, 1.5, 1, 17, 7, 15, fur)
+    h.box(0.5, 0.5, 15, 15.5, 5, 16.5, fur)
+    h.box(5.5, 3, -1.2, 10.5, 5.5, -1, None, faces="n", tag="badge")
+    h.decal("badge", "north", 0, 0, "...GGGG... .GGYYYYGG. GYYYGGYYYG .GGYYYYGG. ...GGGG...", G="#a8823a", Y="#e4c058")
+
+
+def graduation_cap():
+    h = Hat("graduation_cap", "Graduation Cap", shaped("PPP", " WG", P="minecraft:black_carpet", W="minecraft:black_wool", G="minecraft:gold_nugget"))
+    black, gold = ("#18181c", "felt"), ("#e2b33a", "gold")
+    h.mid(15, 15, 0, 4.5, black)
+    h.mid(20, 20, 4.5, 5.25, ("#18181c", "plastic"), rot=("y", 45, (8, 4.5, 8)))
+    h.mid(1.75, 1.75, 5.25, 5.75, gold)
+    h.box(8, 5.25, 7.6, 17.5, 5.55, 8.4, gold)          # cord to the corner...
+    h.box(16.75, 1.5, 7.25, 18.25, 5.25, 8.75, gold)   # ...and the tassel hanging from it
+
+
+def jester_hat():
+    h = Hat("jester_hat", "Jester Hat", shaped("NNN", "RYP", N="minecraft:gold_nugget", R="minecraft:red_wool",
+                                              Y="minecraft:yellow_wool", P="minecraft:purple_wool"))
+    red, purple, yellow = ("#c8202c", "felt"), ("#6b2fa0", "felt"), ("#f0c020", "felt")
+    bell = ("#e2b33a", "gold")
+    h.box(0.5, 0, 0.5, 8, 4.5, 15.5, red)
+    h.box(8, 0, 0.5, 15.5, 4.5, 15.5, purple)
+    h.mid(16, 16, 0, 2, bell)
+    # Three floppy points, each with its bell
+    h.box(-1, 4, 5.5, 4, 7.5, 10.5, red)
+    h.box(-4, 6, 6, 0, 8.5, 10, red)
+    h.box(-6, 3.5, 6.5, -3, 7, 9.5, red)
+    h.box(-6.25, 1.5, 6.75, -2.75, 3.5, 9.25, bell)
+    h.box(12, 4, 5.5, 17, 7.5, 10.5, purple)
+    h.box(16, 6, 6, 20, 8.5, 10, purple)
+    h.box(19, 3.5, 6.5, 22, 7, 9.5, purple)
+    h.box(18.75, 1.5, 6.75, 22.25, 3.5, 9.25, bell)
+    h.box(5.5, 4.5, 6, 10.5, 10, 11, yellow)
+    h.box(6, 9, 10, 10, 11.5, 14.5, yellow)
+    h.box(6.5, 6.5, 13.5, 9.5, 10, 16.5, yellow)
+    h.box(6.25, 4.5, 13.25, 9.75, 6.5, 16.75, bell)
+
+
+def party_hat():
+    h = Hat("party_hat", "Party Hat", shaped(" P ", "PDP", P="minecraft:paper", D="minecraft:pink_dye"))
+    paper = ("#ffffff", "party")
+    h.mid(15, 15, 0, 3.5, paper)
+    h.mid(12, 12, 3.5, 7, paper)
+    h.mid(9, 9, 7, 10.5, paper)
+    h.mid(6, 6, 10.5, 14, paper)
+    h.mid(3.5, 3.5, 14, 16.5, paper)
+    h.mid(3.5, 3.5, 16.5, 19, ("#ffd23f", "fur"))      # pom-pom
+
+
+def witch_hat():
+    h = Hat("witch_hat", "Witch Hat", shaped(" S ", " W ", "WWW", S="minecraft:spider_eye", W="minecraft:black_wool"))
+    black, band = ("#2a2233", "felt"), ("#6a2c91", "cloth")
+    h.brim(26, 0, 0.75, black)
+    h.mid(15, 15, 0.75, 5, black)
+    h.mid(15.5, 15.5, 0.75, 3, band)
+    h.mid(12, 12, 5, 9, black, dx=0.5)
+    h.mid(9, 9, 9, 12.5, black, dx=1.5)
+    h.mid(6, 6, 12, 15.5, black, dx=3)
+    h.mid(4, 4, 15, 17.5, black, dx=5)                   # the tip bends over to one side
+    h.box(14, 14.5, 7, 18, 16.5, 9, black)
+    h.box(16.5, 12, 7.25, 18.5, 15, 8.75, black)
+    h.box(5.5, 1.125, 0.05, 10.5, 2.625, 0.25, None, faces="n", tag="buckle")
+    h.decal("buckle", "north", 0, 0, "GGGGGGGGGG G........G GGGGGGGGGG", G="#e2b33a")
+
+
+def fez():
+    h = Hat("fez", "Fez", shaped("RRR", "RSR", R="minecraft:red_wool", S="minecraft:string"))
+    red, black = ("#b51f28", "felt"), ("#18181c", "cloth")
+    h.mid(15, 15, 0, 4, red)
+    h.mid(14, 14, 4, 7, red)
+    h.mid(13, 13, 7, 8.5, red)
+    h.mid(1.5, 1.5, 8.5, 9, black)
+    h.box(8, 8.5, 7.6, 15, 8.8, 8.4, black)              # the cord over the top...
+    h.box(14.5, 3, 7.25, 16, 8.75, 8.75, black)          # ...and the tassel down the side
+
+
+def mushroom_cap():
+    h = Hat("mushroom_cap", "Mushroom Cap", shaped("MMM", "W W", M="minecraft:red_mushroom", W="minecraft:white_wool"))
+    red = ("#d02a26", "spots")
+    h.mid(15, 15, 0, 3, ("#efe6d2", "pleat"))            # the gills under the cap
+    h.brim(22, 1, 3.5, red)
+    h.brim(19, 3.5, 5.5, red)
+    h.mid(14, 14, 5.5, 7, red)
+    h.mid(8, 8, 7, 8, red)
+
+
+def halo():
+    h = Hat("halo", "Halo", shaped(" G ", "GLG", " G ", G="minecraft:gold_ingot", L="minecraft:glowstone_dust"))
+    light = ("#ffe89a", "glow")
+    # A ring floating over the head, not around it
+    for x0, z0, x1, z1 in ((4, 1, 12, 2.5), (4, 13.5, 12, 15), (1, 4, 2.5, 12), (13.5, 4, 15, 12)):
+        h.box(x0, 8, z0, x1, 9, z1, light)
+    for x, z in ((2, 2), (11.5, 2), (2, 11.5), (11.5, 11.5)):
+        h.box(x, 8, z, x + 2.5, 9, z + 2.5, light)
+
+
+def samurai_helmet():
+    h = Hat("samurai_helmet", "Samurai Helmet", shaped("G G", "III", "IRI", G="minecraft:gold_nugget", I="minecraft:iron_ingot", R="minecraft:red_dye"))
+    lacquer, gold = ("#1f1d22", "plastic"), ("#d9a830", "gold")
+    lames = ("#24222a", "lames")
+    h.mid(15, 15, 0, 5, lacquer)
+    h.mid(13, 13, 5, 7, lacquer)
+    h.mid(9, 9, 7, 8, lacquer)
+    h.mid(1.5, 1.5, 8, 8.75, gold)
+    # The neck guard flares out over the sides and the back, in laced plates
+    h.box(-1.5, 0, 3, 17.5, 3, 18, lames)
+    h.box(-0.5, 3, 4, 16.5, 4.5, 17, lames)
+    # Turned-back wings at the front
+    h.box(-2.5, 1.5, 0.5, 0.5, 5, 3.5, lacquer)
+    h.box(15.5, 1.5, 0.5, 18.5, 5, 3.5, lacquer)
+    # The golden crest: a base on the brow and two horns sweeping up
+    h.box(6.5, 4.5, -0.75, 9.5, 6.5, 0.5, gold)
+    h.box(3.5, 5.5, -0.5, 6.5, 6.5, 0.25, gold)
+    h.box(9.5, 5.5, -0.5, 12.5, 6.5, 0.25, gold)
+    h.box(2.5, 6, -0.5, 3.75, 11, 0.25, gold, rot=("z", 20, (3.5, 6, 0)))
+    h.box(12.25, 6, -0.5, 13.5, 11, 0.25, gold, rot=("z", -20, (12.5, 6, 0)))
+
+
+def aviator_cap():
+    h = Hat("aviator_cap", "Aviator Cap", shaped("LLL", "GLG", L="minecraft:leather", G="minecraft:glass_pane"))
+    leather, fleece = ("#6b4226", "leather"), ("#e9dcc2", "fur")
+    brass = ("#b8893a", "metal")
+    h.mid(15, 15, 0, 5, leather)
+    h.mid(13.5, 13.5, 5, 7, leather)
+    h.mid(10, 10, 7, 8, leather)
+    h.box(-0.5, 0, 4, 1, 4.5, 11, fleece)               # ear flaps, buckled up
+    h.box(15, 0, 4, 16.5, 4.5, 11, fleece)
+    h.mid(15.5, 15.5, 3.75, 5.25, ("#2a221c", "cloth"))  # the goggles' strap
+    h.box(1.5, 3, -0.75, 7, 7, 0.5, brass, tag="lens")
+    h.box(9, 3, -0.75, 14.5, 7, 0.5, brass, tag="lens")
+    h.box(7, 4.5, -0.25, 9, 5.5, 0.5, brass)
+    h.decal("lens", "north", 0, 0, ".BBBBBBBBB. BBGGGGGGGBB BGGHHGGGGGB BGGHGGGGGGB BGGGGGGGGGB BGGGGGGGGGB BBGGGGGGGBB .BBBBBBBBB.",
+            B="#b8893a", G="#4f8a6a", H="#b9e3c6")
+
+
+def captain_hat():
+    h = Hat("captain_hat", "Captain Hat", shaped("WWW", "KGK", W="minecraft:white_wool", K="minecraft:black_wool", G="minecraft:gold_nugget"))
+    white, black, gold = ("#f3f2ec", "cloth"), ("#1b1d26", "cloth"), ("#e2b33a", "gold")
+    h.mid(15, 15, 0, 3.5, black)
+    h.brim(18, 3.5, 6, white)                            # the wide top
+    h.box(2.5, 0, -4, 13.5, 0.75, 0.5, ("#111114", "plastic"))   # visor
+    h.box(2, 1, -0.25, 14, 1.75, 0.5, gold)              # braid over the visor
+    h.box(5.5, 1.75, -0.5, 10.5, 6.25, -0.25, None, faces="n", tag="anchor")
+    h.decal("anchor", "north", 0, 0, "....GG.... ...G..G... ....GG.... .GGGGGGGG. ....GG.... ....GG.... G...GG...G GG..GG..GG .GGGGGGGG.",
+            G="#e2b33a")
+
+
+def frog_hat():
+    h = Hat("frog_hat", "Frog Hat", shaped("S S", "GGG", S="minecraft:slime_ball", G="minecraft:green_wool"))
+    green = ("#5aa83e", "felt")
+    h.brim(20, 0, 0.75, green)
+    h.mid(15, 15, 0.75, 5, green)
+    h.mid(13, 13, 5, 6.5, green)
+    for x in (3, 10):
+        h.box(x, 6, 2.5, x + 3, 9, 5.5, green, tag="eye")
+    eye = ".WWWW. WWWWWW WKKWWW WKKWWW WWWWWW .WWWW."
+    h.decal("eye", "north", 0, 0, eye, W="#f6f6f2", K="#18181c")
+    h.box(4, 3, 0.3, 12, 4.5, 0.5, None, faces="n", tag="mouth")
+    h.decal("mouth", "north", 0, 0, "K..............K .KKKKKKKKKKKKKK. ....PP....PP....", K="#2c4a22", P="#f08a9a")
+
+
+def chicken_hat():
+    h = Hat("chicken_hat", "Chicken Hat", shapeless("minecraft:feather", "minecraft:feather", "minecraft:egg", "minecraft:white_wool"))
+    white = ("#f4f3ee", "fur")
+    # A chicken sitting on the head, as Minecraft draws one
+    h.box(4.5, 0, 4, 11.5, 7, 13, white)
+    h.box(3.5, 2.5, 5, 4.5, 6, 11.5, white)              # wings
+    h.box(11.5, 2.5, 5, 12.5, 6, 11.5, white)
+    h.box(5.5, 5, 1.5, 10.5, 12, 5.5, white, tag="head")
+    h.box(5.5, 8, -0.5, 10.5, 10, 1.5, ("#f2b51c", "plastic"))   # beak
+    h.box(7, 6, 0.5, 9, 8, 1.5, ("#d0282a", "cloth"))            # wattle
+    h.decal("head", "north", 0, 2, "K........K K........K", K="#18181c")
+
+
+def tall_top_hats():
+    """Top hats from games and anime: a felt crown, a coloured band, and each one's own touch."""
+    for name, title, felt, band, wool, dye in (
+            ("professor_top_hat", "Professor's Top Hat", "#4e3527", "#d4561e", "brown", "orange"),
+            ("time_traveler_top_hat", "Time Traveler's Top Hat", "#6a4bb0", "#f2b81c", "purple", "yellow"),
+            ("phantom_thief_hat", "Phantom Thief Hat", "#eef0f2", "#2f4a8a", "white", "blue")):
+        h = Hat(name, title, shaped(" W ", " W ", f"WDW", W=f"minecraft:{wool}_wool", D=f"minecraft:{dye}_dye"))
+        felt, band = (felt, "felt"), (band, "cloth")
+        if name == "time_traveler_top_hat":
+            h.brim(20, 0, 0.75, felt)
+            h.mid(15, 15, 0.75, 6, felt)
+            h.mid(16, 16, 6, 11.5, felt)                 # flaring out towards the top
+            h.mid(15.5, 15.5, 0.75, 3.75, band)
+            continue
+        h.brim(22 if name == "phantom_thief_hat" else 21, 0, 0.75, felt)
+        h.mid(15, 15, 0.75, 13.5 if name == "professor_top_hat" else 12.5, felt)
+        h.mid(15.5, 15.5, 0.75, 3.5, band)
+        if name == "phantom_thief_hat":
+            h.box(-1, 1, 4, 0.25, 4, 7, band)            # a bow on the left side
+            h.box(-1.5, 1.5, 2.5, 0.25, 3.5, 4, band)
+            h.box(-1.5, 1.5, 7, 0.25, 3.5, 8.5, band)
+
+
+def apprentice_cap():
+    h = Hat("apprentice_cap", "Apprentice Cap", shaped("WWW", "WS ", W="minecraft:light_blue_wool", S="minecraft:stone_button"))
+    cloth = ("#6f8ea3", "cloth")
+    h.mid(15, 15, 0, 3.5, cloth)
+    h.mid(17, 16, 3.5, 5.5, cloth, dz=0.5)               # soft and round, wider than the head
+    h.mid(15.5, 14.5, 5.5, 7, cloth, dz=0.5)
+    h.mid(11, 10.5, 7, 8, cloth, dz=0.5)
+    h.mid(0.75, 12, 7.75, 8.3, cloth, dz=0.5)            # the seam over the top
+    h.mid(1.5, 1.5, 8, 8.75, cloth)                      # button
+    h.box(3, 0, -2.5, 13, 0.75, 0.5, ("#5d7a8d", "cloth"))   # a short peak
+
+
+def trainer_cap():
+    h = Hat("trainer_cap", "Trainer Cap", shaped("RWR", "GL ", R="minecraft:red_wool", W="minecraft:white_wool",
+                                                  G="minecraft:green_dye", L="minecraft:leather"))
+    red, white = ("#d62b2b", "cloth"), ("#f4f4f0", "cloth")
+    h.mid(15, 15, 0, 4.5, red)
+    h.mid(13.5, 13.5, 4.5, 6, red)
+    h.mid(10.5, 10.5, 6, 7, red)
+    h.box(1.5, 0.5, -0.25, 14.5, 6.25, 4, white)         # the white front
+    h.box(3, 6, 0.5, 13, 7, 4, white)
+    h.box(2, 0, -5.5, 14, 0.75, 0.5, red)                # peak
+    h.box(3.5, 0, -6.5, 12.5, 0.75, -5.5, red)
+    h.box(4.5, 1, -0.45, 11.5, 5.5, -0.25, None, faces="n", tag="logo")
+    h.decal("logo", "north", 0, 0, "...........GG. .........GGG.. .......GGG.... .....GGG...... ...GGG........ ..GG.......... "
+                                   ".GG........... .GGGGGGGGGGG.. ..GGGGGGGGGGGG", G="#2e7d32")
+
+
+def wanderer_hat():
+    h = Hat("wanderer_hat", "Wanderer's Hat", shaped("NGN", "BBB", "S S", N="minecraft:gold_nugget", G="minecraft:gold_ingot",
+                                                    B="minecraft:black_wool", S="minecraft:string"))
+    dark, red, gold = ("#2b1d22", "felt"), ("#b3262b", "cloth"), ("#c99a3c", "gold")
+    h.mid(15, 15, 0, 6, dark)
+    # A wide, low cone, red underneath
+    h.brim(31, 6, 6.5, red)
+    h.brim(30, 6.5, 7.25, dark)
+    h.brim(22, 7.25, 8.25, dark)
+    h.brim(14, 8.25, 9.25, dark)
+    h.mid(8, 8, 9.25, 10.25, dark)
+    # The golden crest in front, and the scrolls on the two ends of the brim
+    h.box(7.25, 7.25, 0.25, 8.75, 13.5, 1.25, gold)
+    h.box(6.75, 13.5, -0.5, 9.25, 16, 2, gold)              # a plate on top of the post
+    h.box(7.25, 16, 0, 8.75, 16.75, 1.5, gold)
+    for x0, y0, z0, x1, y1, z1, material in (
+            (-6.5, 7.25, 7, -5, 10, 9, gold), (-8, 9, 7, -6.5, 11, 9, gold), (-6.5, 10.5, 7, -5, 11.5, 9, gold),
+            # A red cord hanging from under the brim, with a golden ring at its end
+            (-5.25, 1.5, 7.6, -4.5, 6, 8.4, red), (-6, 0, 7.25, -3.75, 1.5, 8.75, gold)):
+        h.box(x0, y0, z0, x1, y1, z1, material)
+        h.box(16 - x1, y0, z0, 16 - x0, y1, z1, material)   # and the same on the right
+
+
+def black_mage_hat():
+    h = Hat("black_mage_hat", "Black Mage Hat", shaped("  Y", " YY", "YLY", Y="minecraft:yellow_wool", L="minecraft:leather"))
+    straw, band = ("#d4b064", "felt"), ("#8b5a36", "leather")
+    h.brim(25, 0, 1, straw)
+    h.mid(15, 15, 1, 6, straw)
+    h.mid(15.5, 15.5, 1.5, 4, band)
+    h.mid(13, 13, 6, 9.5, straw)
+    h.mid(11, 11, 9.5, 12.5, straw, dz=-0.5)
+    h.mid(8.5, 8.5, 12.5, 15, straw, dx=0.5, dz=-1.5)
+    h.mid(6, 6, 15, 17, straw, dx=0.5, dz=-3)
+    h.mid(4.5, 4.5, 16.5, 18.5, straw, dx=0.5, dz=-5.5)  # the tip flops forward...
+    h.mid(3, 3, 14.5, 17, straw, dx=0.5, dz=-7.5)        # ...and down
+
+
 for make in (hard_hat, wizard_hat, flat_cap, straw_hat, elf_cap, cowboy_hat, baseball_cap, top_hats, plumber_caps,
-             chef_hat, crown, santa_hat, viking_helmet, propeller_beanie):
+             chef_hat, crown, santa_hat, viking_helmet, propeller_beanie, pirate_hat, sombrero, fedora, beret, ushanka,
+             graduation_cap, jester_hat, party_hat, witch_hat, fez, mushroom_cap, halo, samurai_helmet, aviator_cap,
+             captain_hat, frog_hat, chicken_hat, tall_top_hats, apprentice_cap, trainer_cap, wanderer_hat, black_mage_hat):
     make()
+
+# A famous line from the game, anime or film a hat comes from, shown under its name
+QUOTES = {
+    "red_plumber_cap": "It's-a me, Mario!",
+    "green_plumber_cap": "Okey dokey!",
+    "mushroom_cap": "Thank you Mario! But our princess is in another castle!",
+    "elf_cap": "It's dangerous to go alone! Take this.",
+    "straw_hat": "I'm gonna be King of the Pirates!",
+    "cowboy_hat": "Thank you for loving me.",
+    "baseball_cap": "The ball is my friend!",
+    "flat_cap": "By order of the Peaky Blinders.",
+    "fedora": "It belongs in a museum!",
+    "fez": "I wear a fez now. Fezzes are cool.",
+    "party_hat": "The cake is a lie.",
+    "halo": "Wake me, when you need me.",
+    "chicken_hat": "Chicken jockey!",
+    "professor_top_hat": "Every puzzle has an answer.",
+    "apprentice_cap": "I'm the Professor's number one apprentice!",
+    "phantom_thief_hat": "Ladies and gentlemen, it's showtime!",
+    "trainer_cap": "I choose you!",
+    "black_mage_hat": "How do you prove that you exist...?",
+}
 
 
 # ------------------------------------------------------------------ files
@@ -447,6 +825,10 @@ def write(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(data if isinstance(data, str) else json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
+
+JEI_INFO = ("A hat, just for looks. Right-click with it or put it in your helmet slot to wear it.\n\n"
+            "Right-click a CyberFarm drone with it (sneaking, on a Taxi drone) and the drone wears it in place of its "
+            "antenna. Shears take it off; a drone you pick up drops its hat.")
 
 PAGE = """---
 navigation:
@@ -484,6 +866,8 @@ ground. Armor stands can wear hats too.
 
 def main():
     java = (ROOT / "src/main/java/com/cyberhats/CyberHats.java").read_text(encoding="utf-8")
+    quoted = set(re.findall(r'"(\w+)"', java.split("QUOTED =")[1].split(";")[0]))
+    assert quoted == set(QUOTES), f"CyberHats.QUOTED must list exactly the hats with a quote: {sorted(quoted ^ set(QUOTES))}"
     for hat in HATS:
         assert f'"{hat.name}"' in java, f"{hat.name} is not registered in CyberHats.HATS"
         elements, rows, size, (low, high) = build(hat)
@@ -498,7 +882,12 @@ def main():
             "elements": elements})
         write(ASSETS / f"items/{hat.name}.json", {"model": {"type": "minecraft:model", "model": f"cyberhats:item/{hat.name}"}})
         write(DATA / f"recipe/{hat.name}.json", {**hat.recipe, "result": {"id": f"cyberhats:{hat.name}"}})
-    write(ASSETS / "lang/en_us.json", {f"item.cyberhats.{hat.name}": hat.title for hat in HATS})
+    lang = {}
+    for hat in HATS:
+        lang[f"item.cyberhats.{hat.name}"] = hat.title
+        if hat.name in QUOTES:
+            lang[f"item.cyberhats.{hat.name}.quote"] = f'"{QUOTES[hat.name]}"'
+    write(ASSETS / "lang/en_us.json", {**lang, "cyberhats.jei.hat": JEI_INFO})
     write(ASSETS / "guides/cyberfarm/handbook/hats.md", PAGE.format(
         ids="\n".join(f"  - cyberhats:{hat.name}" for hat in HATS),
         icons="\n".join(f'  <ItemIcon id="cyberhats:{hat.name}" />' for hat in HATS),

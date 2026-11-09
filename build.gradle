@@ -50,6 +50,9 @@ neoForge {
 dependencies {
     // Replaced by the ../cyberfarm sources (see settings.gradle)
     implementation 'com.cyberfarm:cyberfarm'
+    // JEI is optional: only its API at compile time, for the information page on every hat
+    compileOnly "mezz.jei:jei-26.2-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-26.2-neoforge-api:${jei_version}"
     runtimeOnly "org.appliedenergistics:guideme:${guideme_version}"
     runtimeOnly "mezz.jei:jei-26.2-neoforge:${jei_version}"
 }

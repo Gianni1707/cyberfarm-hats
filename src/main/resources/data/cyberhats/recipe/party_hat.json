@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "P": "minecraft:paper",
+    "D": "minecraft:pink_dye"
+  },
+  "pattern": [
+    " P ",
+    "PDP"
+  ],
+  "result": {
+    "id": "cyberhats:party_hat"
+  }
+}

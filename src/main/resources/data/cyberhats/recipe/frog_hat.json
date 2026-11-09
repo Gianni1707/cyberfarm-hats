@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": "minecraft:slime_ball",
+    "G": "minecraft:green_wool"
+  },
+  "pattern": [
+    "S S",
+    "GGG"
+  ],
+  "result": {
+    "id": "cyberhats:frog_hat"
+  }
+}

@@ -21,6 +21,30 @@ item_ids:
   - cyberhats:santa_hat
   - cyberhats:viking_helmet
   - cyberhats:propeller_beanie
+  - cyberhats:pirate_hat
+  - cyberhats:sombrero
+  - cyberhats:fedora
+  - cyberhats:beret
+  - cyberhats:ushanka
+  - cyberhats:graduation_cap
+  - cyberhats:jester_hat
+  - cyberhats:party_hat
+  - cyberhats:witch_hat
+  - cyberhats:fez
+  - cyberhats:mushroom_cap
+  - cyberhats:halo
+  - cyberhats:samurai_helmet
+  - cyberhats:aviator_cap
+  - cyberhats:captain_hat
+  - cyberhats:frog_hat
+  - cyberhats:chicken_hat
+  - cyberhats:professor_top_hat
+  - cyberhats:time_traveler_top_hat
+  - cyberhats:phantom_thief_hat
+  - cyberhats:apprentice_cap
+  - cyberhats:trainer_cap
+  - cyberhats:wanderer_hat
+  - cyberhats:black_mage_hat
 ---
 
 # Hats
@@ -42,6 +66,30 @@ item_ids:
   <ItemIcon id="cyberhats:santa_hat" />
   <ItemIcon id="cyberhats:viking_helmet" />
   <ItemIcon id="cyberhats:propeller_beanie" />
+  <ItemIcon id="cyberhats:pirate_hat" />
+  <ItemIcon id="cyberhats:sombrero" />
+  <ItemIcon id="cyberhats:fedora" />
+  <ItemIcon id="cyberhats:beret" />
+  <ItemIcon id="cyberhats:ushanka" />
+  <ItemIcon id="cyberhats:graduation_cap" />
+  <ItemIcon id="cyberhats:jester_hat" />
+  <ItemIcon id="cyberhats:party_hat" />
+  <ItemIcon id="cyberhats:witch_hat" />
+  <ItemIcon id="cyberhats:fez" />
+  <ItemIcon id="cyberhats:mushroom_cap" />
+  <ItemIcon id="cyberhats:halo" />
+  <ItemIcon id="cyberhats:samurai_helmet" />
+  <ItemIcon id="cyberhats:aviator_cap" />
+  <ItemIcon id="cyberhats:captain_hat" />
+  <ItemIcon id="cyberhats:frog_hat" />
+  <ItemIcon id="cyberhats:chicken_hat" />
+  <ItemIcon id="cyberhats:professor_top_hat" />
+  <ItemIcon id="cyberhats:time_traveler_top_hat" />
+  <ItemIcon id="cyberhats:phantom_thief_hat" />
+  <ItemIcon id="cyberhats:apprentice_cap" />
+  <ItemIcon id="cyberhats:trainer_cap" />
+  <ItemIcon id="cyberhats:wanderer_hat" />
+  <ItemIcon id="cyberhats:black_mage_hat" />
 </ItemGrid>
 
 Hats do nothing at all, and look good doing it. **You** can wear one, and so can your
@@ -74,3 +122,27 @@ ground. Armor stands can wear hats too.
 <RecipeFor id="cyberhats:santa_hat" />
 <RecipeFor id="cyberhats:viking_helmet" />
 <RecipeFor id="cyberhats:propeller_beanie" />
+<RecipeFor id="cyberhats:pirate_hat" />
+<RecipeFor id="cyberhats:sombrero" />
+<RecipeFor id="cyberhats:fedora" />
+<RecipeFor id="cyberhats:beret" />
+<RecipeFor id="cyberhats:ushanka" />
+<RecipeFor id="cyberhats:graduation_cap" />
+<RecipeFor id="cyberhats:jester_hat" />
+<RecipeFor id="cyberhats:party_hat" />
+<RecipeFor id="cyberhats:witch_hat" />
+<RecipeFor id="cyberhats:fez" />
+<RecipeFor id="cyberhats:mushroom_cap" />
+<RecipeFor id="cyberhats:halo" />
+<RecipeFor id="cyberhats:samurai_helmet" />
+<RecipeFor id="cyberhats:aviator_cap" />
+<RecipeFor id="cyberhats:captain_hat" />
+<RecipeFor id="cyberhats:frog_hat" />
+<RecipeFor id="cyberhats:chicken_hat" />
+<RecipeFor id="cyberhats:professor_top_hat" />
+<RecipeFor id="cyberhats:time_traveler_top_hat" />
+<RecipeFor id="cyberhats:phantom_thief_hat" />
+<RecipeFor id="cyberhats:apprentice_cap" />
+<RecipeFor id="cyberhats:trainer_cap" />
+<RecipeFor id="cyberhats:wanderer_hat" />
+<RecipeFor id="cyberhats:black_mage_hat" />

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "R": "minecraft:red_wool",
+    "W": "minecraft:white_wool",
+    "G": "minecraft:green_dye",
+    "L": "minecraft:leather"
+  },
+  "pattern": [
+    "RWR",
+    "GL "
+  ],
+  "result": {
+    "id": "cyberhats:trainer_cap"
+  }
+}

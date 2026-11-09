@@ -24,6 +24,14 @@ Hats for you and for your CyberFarm drones. Purely cosmetic.
     side="BOTH"
 
 [[dependencies.cyberhats]]
+    modId="jei"
+    type="optional"
+    reason="An information page on every hat"
+    versionRange="*"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.cyberhats]]
     modId="cyberfarm"
     type="required"
     versionRange="[0.9.5,)"
