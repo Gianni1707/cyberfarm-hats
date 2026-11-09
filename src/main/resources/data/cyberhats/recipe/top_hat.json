@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "W": "minecraft:black_wool",
+    "R": "minecraft:red_dye"
+  },
+  "pattern": [
+    " W ",
+    " W ",
+    "WRW"
+  ],
+  "result": {
+    "id": "cyberhats:top_hat"
+  }
+}

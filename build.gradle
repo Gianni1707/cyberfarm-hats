@@ -1,0 +1,60 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+version = mod_version
+group = 'com.cyberhats'
+
+base {
+    archivesName = 'cyberhats'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+repositories {
+    // GuideME, to read the handbook page in the dev client
+    mavenCentral()
+}
+
+neoForge {
+    version = project.neo_version
+
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+            gameDirectory = project.file('run-server')
+            programArgument '--nogui'
+        }
+        gameTestServer {
+            type = "gameTestServer"
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'cyberhats'
+        }
+    }
+
+    mods {
+        cyberhats {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+dependencies {
+    // Replaced by the ../cyberfarm sources (see settings.gradle)
+    implementation 'com.cyberfarm:cyberfarm'
+    runtimeOnly "org.appliedenergistics:guideme:${guideme_version}"
+}
+
+jar {
+    // neoforge.mods.toml reads the mod version from here
+    manifest {
+        attributes 'Implementation-Version': project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

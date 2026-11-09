@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "cyberhats:top_hat",
+    "minecraft:glass_pane",
+    "minecraft:glass_pane",
+    "minecraft:blue_dye"
+  ],
+  "result": {
+    "id": "cyberhats:goggle_top_hat"
+  }
+}

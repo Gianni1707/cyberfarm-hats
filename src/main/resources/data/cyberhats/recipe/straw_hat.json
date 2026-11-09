@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "W": "minecraft:wheat",
+    "R": "minecraft:red_carpet"
+  },
+  "pattern": [
+    "WWW",
+    "WRW"
+  ],
+  "result": {
+    "id": "cyberhats:straw_hat"
+  }
+}
