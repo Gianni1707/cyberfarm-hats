@@ -12,7 +12,7 @@ CyberFarm is built from `../cyberfarm` (a Gradle composite build), so keep the t
 
 ```
 ./gradlew build                # build/libs/cyberhats-<version>.jar
-./gradlew runClient            # dev client with CyberFarm, the addon and GuideME
+./gradlew runClient            # dev client with CyberFarm, the addon, GuideME and JEI (-Pworld="New World" opens that world)
 ./gradlew runGameTestServer    # checks that a drone can wear a hat and drops it when picked up
 ```
 

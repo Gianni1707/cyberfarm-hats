@@ -13,8 +13,9 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 repositories {
-    // GuideME, to read the handbook page in the dev client
+    // GuideME and JEI, to read the handbook page and the recipes in the dev client
     mavenCentral()
+    maven { url = "https://maven.blamejared.com" }
 }
 
 neoForge {
@@ -23,6 +24,10 @@ neoForge {
     runs {
         client {
             client()
+            // ./gradlew runClient -Pworld="New World" opens that world straight away
+            if (project.hasProperty('world')) {
+                programArguments.addAll('--quickPlaySingleplayer', project.property('world'))
+            }
         }
         server {
             server()
@@ -46,6 +51,7 @@ dependencies {
     // Replaced by the ../cyberfarm sources (see settings.gradle)
     implementation 'com.cyberfarm:cyberfarm'
     runtimeOnly "org.appliedenergistics:guideme:${guideme_version}"
+    runtimeOnly "mezz.jei:jei-26.2-neoforge:${jei_version}"
 }
 
 jar {
