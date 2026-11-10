@@ -6,6 +6,10 @@ A cosmetic addon for [CyberFarm](https://github.com/Gianni1707/cyberfarm): hats 
 - **On a drone:** right-click the drone with the hat (sneak on a Taxi drone). Shears take it off.
 - A picked-up or destroyed drone drops its hat.
 
+![Every hat on a wall of item frames](docs/hat-wall.webp)
+
+![A drone wearing the straw hat on its dock](docs/drone-hat.png)
+
 ## Build
 
 One branch per Minecraft version, like CyberFarm: `master` for 26.2, `mc/26.1.2` and `mc/1.20.1`. Each builds
