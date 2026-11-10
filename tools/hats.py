@@ -907,7 +907,9 @@ def main():
         write(ASSETS / f"models/item/{hat.name}.json", {
             "parent": "cyberhats:item/hat",
             "textures": {"hat": f"cyberhats:item/{hat.name}", "particle": f"cyberhats:item/{hat.name}"},
-            "display": {"gui": {"rotation": [30, 225, 0], "translation": [0, lift, 0], "scale": [scale] * 3}},
+            "display": {"gui": {"rotation": [30, 225, 0], "translation": [0, lift, 0], "scale": [scale] * 3},
+                        # In an item frame: the same three-quarter view, turned for a frame that faces the viewer
+                        "fixed": {"rotation": [-30, 45, 0], "translation": [0, round(lift * 0.8, 2), 0], "scale": [round(scale * 0.8, 3)] * 3}},
             "elements": elements})
         if LEGACY:
             write(DATA / f"recipes/{hat.name}.json", legacy_recipe(hat))
