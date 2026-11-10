@@ -7,3 +7,6 @@ run-server/
 .vscode/
 bin/
 __pycache__/
+
+# dev / local-only, never committed: the showcase world and the script that builds it
+/tools/showcase.py
