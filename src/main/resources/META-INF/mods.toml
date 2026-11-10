@@ -6,6 +6,9 @@ license="MIT"
 modId="cyberhats"
 version="${file.jarVersion}"
 displayName="CyberFarm Hats"
+# The drone wearing the straw hat, among a few more hats
+logoFile="cyberhats_logo.png"
+logoBlur=false
 authors="Super17_"
 description='''
 Hats for you and for your CyberFarm drones. Purely cosmetic.
