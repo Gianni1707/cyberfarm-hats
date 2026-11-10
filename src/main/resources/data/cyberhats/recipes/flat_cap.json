@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "W": {
+      "item": "minecraft:gray_wool"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "WL "
+  ],
+  "result": {
+    "item": "cyberhats:flat_cap"
+  }
+}

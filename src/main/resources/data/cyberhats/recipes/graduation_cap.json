@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "P": {
+      "item": "minecraft:black_carpet"
+    },
+    "W": {
+      "item": "minecraft:black_wool"
+    },
+    "G": {
+      "item": "minecraft:gold_nugget"
+    }
+  },
+  "pattern": [
+    "PPP",
+    " WG"
+  ],
+  "result": {
+    "item": "cyberhats:graduation_cap"
+  }
+}

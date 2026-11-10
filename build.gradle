@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id 'net.neoforged.moddev' version '2.0.148'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.148'
 }
 
 version = mod_version
@@ -10,10 +10,11 @@ base {
     archivesName = 'cyberhats'
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+// Minecraft 1.20.1 runs on Java 17
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 repositories {
-    // GuideME and JEI, to read the handbook page and the recipes in the dev client
+    // Patchouli and JEI, to read the handbook entry and the recipes in the dev client
     mavenCentral()
     maven { url = "https://maven.blamejared.com" }
     // CyberFarm, straight from its GitHub releases. -Pcyberfarm_repo=file:///some/folder/ reads the same layout
@@ -26,8 +27,8 @@ repositories {
     }
 }
 
-neoForge {
-    version = project.neo_version
+legacyForge {
+    version = "${minecraft_version}-${forge_version}"
 
     runs {
         client {
@@ -44,7 +45,7 @@ neoForge {
         }
         gameTestServer {
             type = "gameTestServer"
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'cyberhats'
+            systemProperty 'forge.enabledGameTestNamespaces', 'cyberhats'
         }
     }
 
@@ -56,16 +57,16 @@ neoForge {
 }
 
 dependencies {
-    implementation "com.cyberfarm:cyberfarm:${cyberfarm_version}"
+    modImplementation "com.cyberfarm:cyberfarm:${cyberfarm_version}"
     // JEI is optional: only its API at compile time, for the information page on every hat
-    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
-    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
-    runtimeOnly "org.appliedenergistics:guideme:${guideme_version}"
-    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+    modCompileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    modCompileOnly "mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"
+    modRuntimeOnly "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
+    modRuntimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}"
 }
 
 jar {
-    // neoforge.mods.toml reads the mod version from here
+    // mods.toml reads the mod version from here
     manifest {
         attributes 'Implementation-Version': project.version
     }

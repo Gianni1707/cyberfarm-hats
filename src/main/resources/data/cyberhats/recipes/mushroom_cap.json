@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "M": {
+      "item": "minecraft:red_mushroom"
+    },
+    "W": {
+      "item": "minecraft:white_wool"
+    }
+  },
+  "pattern": [
+    "MMM",
+    "W W"
+  ],
+  "result": {
+    "item": "cyberhats:mushroom_cap"
+  }
+}

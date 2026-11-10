@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "Y": {
+      "item": "minecraft:yellow_wool"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
+  },
+  "pattern": [
+    "  Y",
+    " YY",
+    "YLY"
+  ],
+  "result": {
+    "item": "cyberhats:black_mage_hat"
+  }
+}

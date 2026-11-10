@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "R": {
+      "item": "cyberfarm:rotor"
+    },
+    "A": {
+      "item": "minecraft:red_wool"
+    },
+    "B": {
+      "item": "minecraft:yellow_wool"
+    },
+    "C": {
+      "item": "minecraft:blue_wool"
+    }
+  },
+  "pattern": [
+    " R ",
+    "ABC"
+  ],
+  "result": {
+    "item": "cyberhats:propeller_beanie"
+  }
+}

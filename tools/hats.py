@@ -851,8 +851,9 @@ JEI_INFO = ("A hat, just for looks. Right-click with it or put it in your helmet
             "Right-click a CyberFarm drone with it (sneaking, on a Taxi drone) and the drone wears it in place of its "
             "antenna. Shears take it off; a drone you pick up drops its hat.")
 
+# Two book pages: a Patchouli page holds about 250 characters
 PATCHOULI_TEXT = ("Hats do nothing at all, and look good doing it. $(l)You$() can wear one, and so can your drones: a drone "
-                  "folds its antenna away and wears the hat on its tank, clear of every module.$(br2)"
+                  "folds its antenna away and wears the hat on its tank, clear of every module.",
                   "$(li)$(l)Wear a hat$(): right-click with it, or put it in your helmet slot.$(br)"
                   "$(li)$(l)On a drone$(): right-click the drone with the hat.$(br)"
                   "$(li)$(l)Take it off$(): right-click the drone with Shears.$(br2)"
@@ -921,7 +922,7 @@ def main():
     write(ASSETS / "lang/en_us.json", {**lang, "cyberhats.jei.hat": JEI_INFO})
     if LEGACY:
         # CyberFarm's 1.20.1 handbook is a Patchouli book read from resource packs: the entry joins its Drones chapter
-        pages = [{"type": "patchouli:text", "text": PATCHOULI_TEXT}]
+        pages = [{"type": "patchouli:text", "text": text} for text in PATCHOULI_TEXT]
         pages += [{"type": "patchouli:crafting", "recipe": f"cyberhats:{a.name}", **({"recipe2": f"cyberhats:{b.name}"} if b else {})}
                   for a, b in zip(HATS[::2], HATS[1::2] + [None])]
         write(ROOT / "src/main/resources/assets/cyberfarm/patchouli_books/handbook/en_us/entries/drone_systems/hats.json",

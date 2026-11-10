@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "H": {
+      "item": "minecraft:hay_block"
+    },
+    "W": {
+      "item": "minecraft:wheat"
+    },
+    "G": {
+      "item": "minecraft:green_dye"
+    }
+  },
+  "pattern": [
+    " H ",
+    "WGW"
+  ],
+  "result": {
+    "item": "cyberhats:sombrero"
+  }
+}

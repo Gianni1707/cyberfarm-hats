@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "B": {
+      "item": "minecraft:brown_wool"
+    },
+    "K": {
+      "item": "minecraft:black_carpet"
+    }
+  },
+  "pattern": [
+    " B ",
+    "BKB"
+  ],
+  "result": {
+    "item": "cyberhats:fedora"
+  }
+}

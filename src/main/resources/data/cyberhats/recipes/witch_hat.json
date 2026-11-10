@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": {
+      "item": "minecraft:spider_eye"
+    },
+    "W": {
+      "item": "minecraft:black_wool"
+    }
+  },
+  "pattern": [
+    " S ",
+    " W ",
+    "WWW"
+  ],
+  "result": {
+    "item": "cyberhats:witch_hat"
+  }
+}

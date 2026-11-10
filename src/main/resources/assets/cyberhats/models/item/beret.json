@@ -158,15 +158,6 @@
           ],
           "texture": "#hat"
         }
-      },
-      "rotation": {
-        "origin": [
-          8,
-          3.5,
-          8
-        ],
-        "axis": "z",
-        "angle": 9
       }
     },
     {
@@ -235,15 +226,6 @@
           ],
           "texture": "#hat"
         }
-      },
-      "rotation": {
-        "origin": [
-          8,
-          3.5,
-          8
-        ],
-        "axis": "z",
-        "angle": 9
       }
     },
     {

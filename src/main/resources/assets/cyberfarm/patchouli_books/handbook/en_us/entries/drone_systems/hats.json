@@ -1,0 +1,116 @@
+{
+  "name": "Hats",
+  "icon": "cyberhats:straw_hat",
+  "category": "cyberfarm:drone_systems",
+  "sortnum": 20,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Hats do nothing at all, and look good doing it. $(l)You$() can wear one, and so can your drones: a drone folds its antenna away and wears the hat on its tank, clear of every module."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(l)Wear a hat$(): right-click with it, or put it in your helmet slot.$(br)$(li)$(l)On a drone$(): right-click the drone with the hat.$(br)$(li)$(l)Take it off$(): right-click the drone with Shears.$(br2)A drone you pick up drops its hat. Armor stands can wear hats too."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:hard_hat",
+      "recipe2": "cyberhats:wizard_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:flat_cap",
+      "recipe2": "cyberhats:straw_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:elf_cap",
+      "recipe2": "cyberhats:cowboy_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:baseball_cap",
+      "recipe2": "cyberhats:top_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:goggle_top_hat",
+      "recipe2": "cyberhats:red_plumber_cap"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:green_plumber_cap",
+      "recipe2": "cyberhats:chef_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:crown",
+      "recipe2": "cyberhats:santa_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:viking_helmet",
+      "recipe2": "cyberhats:propeller_beanie"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:pirate_hat",
+      "recipe2": "cyberhats:sombrero"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:fedora",
+      "recipe2": "cyberhats:beret"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:ushanka",
+      "recipe2": "cyberhats:graduation_cap"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:jester_hat",
+      "recipe2": "cyberhats:party_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:witch_hat",
+      "recipe2": "cyberhats:fez"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:mushroom_cap",
+      "recipe2": "cyberhats:halo"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:samurai_helmet",
+      "recipe2": "cyberhats:aviator_cap"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:captain_hat",
+      "recipe2": "cyberhats:frog_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:chicken_hat",
+      "recipe2": "cyberhats:professor_top_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:time_traveler_top_hat",
+      "recipe2": "cyberhats:phantom_thief_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:apprentice_cap",
+      "recipe2": "cyberhats:trainer_cap"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:wanderer_hat",
+      "recipe2": "cyberhats:black_mage_hat"
+    }
+  ]
+}

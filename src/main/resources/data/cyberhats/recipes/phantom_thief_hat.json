@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+    "D": {
+      "item": "minecraft:blue_dye"
+    }
+  },
+  "pattern": [
+    " W ",
+    " W ",
+    "WDW"
+  ],
+  "result": {
+    "item": "cyberhats:phantom_thief_hat"
+  }
+}

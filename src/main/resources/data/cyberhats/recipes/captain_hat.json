@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+    "K": {
+      "item": "minecraft:black_wool"
+    },
+    "G": {
+      "item": "minecraft:gold_nugget"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "KGK"
+  ],
+  "result": {
+    "item": "cyberhats:captain_hat"
+  }
+}

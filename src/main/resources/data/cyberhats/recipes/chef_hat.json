@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    }
+  },
+  "pattern": [
+    "WW",
+    "WW",
+    "PP"
+  ],
+  "result": {
+    "item": "cyberhats:chef_hat"
+  }
+}

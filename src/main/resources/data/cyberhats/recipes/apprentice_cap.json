@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "W": {
+      "item": "minecraft:light_blue_wool"
+    },
+    "S": {
+      "item": "minecraft:stone_button"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "WS "
+  ],
+  "result": {
+    "item": "cyberhats:apprentice_cap"
+  }
+}
