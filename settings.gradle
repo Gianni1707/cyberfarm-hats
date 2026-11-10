@@ -9,6 +9,3 @@ plugins {
 }
 
 rootProject.name = 'cyberfarm-hats'
-
-// CyberFarm is built from its sources next door, so the addon always compiles and runs against the current mod
-includeBuild '../cyberfarm'

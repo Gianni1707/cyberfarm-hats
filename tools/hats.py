@@ -20,6 +20,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "src/main/resources/assets/cyberhats"
 DATA = ROOT / "src/main/resources/data/cyberhats"
+# Each branch builds one Minecraft version; 1.20.1 has its own file formats, handbook and rotation limits
+MC = next(line.split("=", 1)[1].strip() for line in (ROOT / "gradle.properties").read_text().splitlines()
+          if line.startswith("minecraft_version="))
+LEGACY = MC == "1.20.1"
 RES = 2
 HATS = []
 FACES = {"n": "north", "s": "south", "e": "east", "w": "west", "u": "up", "d": "down"}
@@ -37,6 +41,10 @@ class Hat:
 
     def box(self, x0, y0, z0, x1, y1, z1, material, rot=None, faces="nsewud", tag=None):
         """rot: (axis, degrees, origin). material None: see-through, for a face that only carries a decal."""
+        if rot and LEGACY:
+            # 1.20.1 only turns an element by a multiple of 22.5 degrees, up to 45
+            angle = max(-45.0, min(45.0, round(rot[1] / 22.5) * 22.5))
+            rot = (rot[0], angle, rot[2]) if angle else None
         self.boxes.append(((x0, y0, z0, x1, y1, z1), material, rot, faces, tag))
 
     def mid(self, width, depth, y0, y1, material, dx=0.0, dz=0.0, **more):
@@ -61,6 +69,16 @@ def shaped(*pattern, **key):
 
 def shapeless(*ingredients):
     return {"type": "minecraft:crafting_shapeless", "category": "equipment", "ingredients": list(ingredients)}
+
+
+def legacy_recipe(hat):
+    """The same recipe in 1.20.1's format, where every item is {"item": id}."""
+    recipe = dict(hat.recipe)
+    if "key" in recipe:
+        recipe["key"] = {k: {"item": v} for k, v in recipe["key"].items()}
+    else:
+        recipe["ingredients"] = [{"item": v} for v in recipe["ingredients"]]
+    return {**recipe, "result": {"item": f"cyberhats:{hat.name}"}}
 
 
 # ------------------------------------------------------------------ textures
@@ -226,7 +244,10 @@ def build(hat):
         if rot:
             element["rotation"] = {"origin": list(rot[2]), "axis": rot[0], "angle": rot[1]}
         if material and material[1] == "glow":
-            element["light_emission"] = 15
+            if LEGACY:
+                element["forge_data"] = {"block_light": 15, "sky_light": 15}
+            else:
+                element["light_emission"] = 15
         for letter in sides:
             x, y, w, h = placed[index, FACES[letter]]
             # A hair inside the rectangle, so its neighbours never bleed in
@@ -830,6 +851,13 @@ JEI_INFO = ("A hat, just for looks. Right-click with it or put it in your helmet
             "Right-click a CyberFarm drone with it (sneaking, on a Taxi drone) and the drone wears it in place of its "
             "antenna. Shears take it off; a drone you pick up drops its hat.")
 
+PATCHOULI_TEXT = ("Hats do nothing at all, and look good doing it. $(l)You$() can wear one, and so can your drones: a drone "
+                  "folds its antenna away and wears the hat on its tank, clear of every module.$(br2)"
+                  "$(li)$(l)Wear a hat$(): right-click with it, or put it in your helmet slot.$(br)"
+                  "$(li)$(l)On a drone$(): right-click the drone with the hat.$(br)"
+                  "$(li)$(l)Take it off$(): right-click the drone with Shears.$(br2)"
+                  "A drone you pick up drops its hat. Armor stands can wear hats too.")
+
 PAGE = """---
 navigation:
   title: Hats
@@ -880,14 +908,26 @@ def main():
             "textures": {"hat": f"cyberhats:item/{hat.name}", "particle": f"cyberhats:item/{hat.name}"},
             "display": {"gui": {"rotation": [30, 225, 0], "translation": [0, lift, 0], "scale": [scale] * 3}},
             "elements": elements})
-        write(ASSETS / f"items/{hat.name}.json", {"model": {"type": "minecraft:model", "model": f"cyberhats:item/{hat.name}"}})
-        write(DATA / f"recipe/{hat.name}.json", {**hat.recipe, "result": {"id": f"cyberhats:{hat.name}"}})
+        if LEGACY:
+            write(DATA / f"recipes/{hat.name}.json", legacy_recipe(hat))
+        else:
+            write(ASSETS / f"items/{hat.name}.json", {"model": {"type": "minecraft:model", "model": f"cyberhats:item/{hat.name}"}})
+            write(DATA / f"recipe/{hat.name}.json", {**hat.recipe, "result": {"id": f"cyberhats:{hat.name}"}})
     lang = {}
     for hat in HATS:
         lang[f"item.cyberhats.{hat.name}"] = hat.title
         if hat.name in QUOTES:
             lang[f"item.cyberhats.{hat.name}.quote"] = f'"{QUOTES[hat.name]}"'
     write(ASSETS / "lang/en_us.json", {**lang, "cyberhats.jei.hat": JEI_INFO})
+    if LEGACY:
+        # CyberFarm's 1.20.1 handbook is a Patchouli book read from resource packs: the entry joins its Drones chapter
+        pages = [{"type": "patchouli:text", "text": PATCHOULI_TEXT}]
+        pages += [{"type": "patchouli:crafting", "recipe": f"cyberhats:{a.name}", **({"recipe2": f"cyberhats:{b.name}"} if b else {})}
+                  for a, b in zip(HATS[::2], HATS[1::2] + [None])]
+        write(ROOT / "src/main/resources/assets/cyberfarm/patchouli_books/handbook/en_us/entries/drone_systems/hats.json",
+              {"name": "Hats", "icon": "cyberhats:straw_hat", "category": "cyberfarm:drone_systems", "sortnum": 20, "pages": pages})
+        print(f"{len(HATS)} hats for {MC}")
+        return
     write(ASSETS / "guides/cyberfarm/handbook/hats.md", PAGE.format(
         ids="\n".join(f"  - cyberhats:{hat.name}" for hat in HATS),
         icons="\n".join(f'  <ItemIcon id="cyberhats:{hat.name}" />' for hat in HATS),

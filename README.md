@@ -1,6 +1,6 @@
 # CyberFarm Hats
 
-A cosmetic addon for [CyberFarm](../cyberfarm): hats that you and your drones can wear.
+A cosmetic addon for [CyberFarm](https://github.com/Gianni1707/cyberfarm): hats that you and your drones can wear.
 
 - **Wear one:** right-click with it, or put it in the helmet slot.
 - **On a drone:** right-click the drone with the hat (sneak on a Taxi drone). Shears take it off.
@@ -8,7 +8,10 @@ A cosmetic addon for [CyberFarm](../cyberfarm): hats that you and your drones ca
 
 ## Build
 
-CyberFarm is built from `../cyberfarm` (a Gradle composite build), so keep the two folders side by side.
+One branch per Minecraft version, like CyberFarm: `master` for 26.2, `mc/26.1.2` and `mc/1.20.1`. Each builds
+against the CyberFarm release named by `cyberfarm_version` in `gradle.properties`, downloaded from its GitHub
+releases. To build against a CyberFarm not released yet, put its jar in a folder as `v<version>/cyberfarm-<version>.jar`
+and add `-Pcyberfarm_repo=file:///that/folder/` to every command.
 
 ```
 ./gradlew build                # build/libs/cyberhats-<version>.jar
