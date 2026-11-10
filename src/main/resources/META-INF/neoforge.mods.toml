@@ -9,17 +9,21 @@ description='''
 Hats for you and for your CyberFarm drones. Purely cosmetic.
 '''
 
+# Hides the antenna of a drone that wears a hat
+[[mixins]]
+config="cyberhats.mixins.json"
+
 [[dependencies.cyberhats]]
     modId="neoforge"
     type="required"
-    versionRange="[26.2.0.93,)"
+    versionRange="[26.1.2.97,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.cyberhats]]
     modId="minecraft"
     type="required"
-    versionRange="[26.2]"
+    versionRange="[26.1.2]"
     ordering="NONE"
     side="BOTH"
 

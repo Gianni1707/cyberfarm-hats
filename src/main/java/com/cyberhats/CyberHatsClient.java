@@ -28,6 +28,11 @@ import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEve
 @Mod(value = CyberHats.MODID, dist = Dist.CLIENT)
 public class CyberHatsClient {
     private static final ContextKey<ItemStackRenderState> HAT = new ContextKey<>(CyberHats.id("drone_hat"));
+
+    /** Whether this drone wears a hat: then it takes the antenna's place (see DroneModelMixin). */
+    public static boolean wearsHat(DroneRenderState state) {
+        return state.getRenderData(HAT) != null;
+    }
     /**
      * Where the hat's bottom stands, in pixels from the drone body's pivot (y down): on the tank, whose top is at -3,
      * just over the rotors' plane at -3.2. The Laser and the Seed Tank end at -3 too; only the Sprayer's canister
@@ -51,8 +56,6 @@ public class CyberHatsClient {
                 // NONE: the bare model, without the transform that fits it to a player's head
                 Minecraft.getInstance().getItemModelResolver().updateForLiving(shown, hat, ItemDisplayContext.NONE, drone);
                 state.setRenderData(HAT, shown);
-                // The hat takes the antenna's place
-                state.overrideModelPartVisibility("antenna", false);
             }
         });
     }

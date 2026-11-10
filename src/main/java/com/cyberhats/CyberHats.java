@@ -24,7 +24,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -120,7 +120,7 @@ public class CyberHats {
         ItemStack hat = HATS.getFirst().toStack();
         DroneEntity drone = helper.spawnWithNoFreeWill(ModEntities.DRONE.get(), 0, 1, 0);
         helper.assertTrue(drone.isEquippableInSlot(hat, EquipmentSlot.HEAD), "a drone can wear a hat");
-        helper.assertFalse(helper.spawnWithNoFreeWill(EntityTypes.COW, 0, 1, 0).isEquippableInSlot(hat, EquipmentSlot.HEAD), "a cow cannot");
+        helper.assertFalse(helper.spawnWithNoFreeWill(EntityType.COW, 0, 1, 0).isEquippableInSlot(hat, EquipmentSlot.HEAD), "a cow cannot");
         // What a right click with the hat does
         drone.setItemSlot(EquipmentSlot.HEAD, hat);
         drone.setGuaranteedDrop(EquipmentSlot.HEAD);
