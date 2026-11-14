@@ -872,13 +872,16 @@ JEI_INFO = ("A hat, just for looks. Right-click with it or put it in your helmet
             "Right-click a CyberFarm drone with it (sneaking, on a Taxi drone) and the drone wears it in place of its "
             "antenna. Shears take it off; a drone you pick up drops its hat.")
 
+# Book pages: a Patchouli page holds about 250 characters
 PATCHOULI_TEXT = ("Hats do nothing at all, and look good doing it. $(l)You$() can wear one, and so can your drones: a drone "
-                  "folds its antenna away and wears the hat on its tank, clear of every module.$(br2)"
+                  "folds its antenna away and wears the hat on its tank, clear of every module.",
                   "$(li)$(l)Wear a hat$(): right-click with it, or put it in your helmet slot.$(br)"
-                  "$(li)$(l)Over a helmet$(): the Hat slot right of you in the inventory; the eye above it hides the hat.$(br)"
+                  "$(li)$(l)Over a helmet$(): put it in the Hat slot right of you in the inventory. The helmet still "
+                  "protects you; the eye above the slot hides the hat.",
                   "$(li)$(l)On a drone$(): right-click the drone with the hat.$(br)"
                   "$(li)$(l)Take it off$(): right-click the drone with Shears.$(br2)"
-                  "A drone you pick up drops its hat. Armor stands can wear hats too.")
+                  "A drone you pick up drops its hat. Armor stands can wear hats too. With Curios or Cosmetic Armor "
+                  "there is no Hat slot: their cosmetic slots take hats.")
 
 PAGE = """---
 navigation:
@@ -950,14 +953,16 @@ def main():
     write(ASSETS / "lang/en_us.json", {**lang, "cyberhats.jei.hat": JEI_INFO, "cyberhats.hat_slot.toggle": "Show or hide the hat",
                                          "cyberhats.hat_slot.hide": "Hide the hat", "cyberhats.hat_slot.show": "Show the hat"})
     for name, (art, colours) in GUI_SPRITES.items():
-        png(ASSETS / f"textures/gui/sprites/{name}.png", sprite(art, colours))
+        # 1.20.1 has no GUI sprites: the empty slot's icon lives in the block atlas, the buttons are plain textures
+        path = {"container/slot/hat": "item/empty_hat_slot", "hat_shown": "gui/hat_shown", "hat_hidden": "gui/hat_hidden"}[name]             if LEGACY else f"gui/sprites/{name}"
+        png(ASSETS / f"textures/{path}.png", sprite(art, colours))
     # With Curios: hats are let into its head slot, and players are given that slot
     write(DATA.parent / f"curios/tags/{'items' if LEGACY else 'item'}/head.json",
           {"replace": False, "values": [f"cyberhats:{hat.name}" for hat in HATS]})
     write(DATA / "curios/entities/hats.json", {"entities": ["minecraft:player"], "slots": ["head"]})
     if LEGACY:
         # CyberFarm's 1.20.1 handbook is a Patchouli book read from resource packs: the entry joins its Drones chapter
-        pages = [{"type": "patchouli:text", "text": PATCHOULI_TEXT}]
+        pages = [{"type": "patchouli:text", "text": text} for text in PATCHOULI_TEXT]
         pages += [{"type": "patchouli:crafting", "recipe": f"cyberhats:{a.name}", **({"recipe2": f"cyberhats:{b.name}"} if b else {})}
                   for a, b in zip(HATS[::2], HATS[1::2] + [None])]
         write(ROOT / "src/main/resources/assets/cyberfarm/patchouli_books/handbook/en_us/entries/drone_systems/hats.json",
