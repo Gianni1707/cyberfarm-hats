@@ -12,7 +12,7 @@ description='''
 Hats for you and for your CyberFarm drones. Purely cosmetic.
 '''
 
-# Hides the antenna of a drone that wears a hat
+# Adds the Hat slot to the player's inventory, and hides the antenna of a drone that wears a hat
 [[mixins]]
 config="cyberhats.mixins.json"
 
@@ -43,4 +43,13 @@ config="cyberhats.mixins.json"
     type="required"
     versionRange="[1.0.0,)"
     ordering="AFTER"
+    side="BOTH"
+
+# With Curios the hats go in its head slot, and the Hat slot of our own is not added
+[[dependencies.cyberhats]]
+    modId="curios"
+    type="optional"
+    reason="Hats in Curios' head slot instead of the Hat slot"
+    versionRange="*"
+    ordering="NONE"
     side="BOTH"

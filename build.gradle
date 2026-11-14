@@ -16,6 +16,8 @@ repositories {
     // GuideME and JEI, to read the handbook page and the recipes in the dev client
     mavenCentral()
     maven { url = "https://maven.blamejared.com" }
+    // Curios, optional: with it the hats go in its head slot
+    maven { url = "https://maven.theillusivec4.top/" }
     // CyberFarm, straight from its GitHub releases. -Pcyberfarm_repo=file:///some/folder/ reads the same layout
     // (v<version>/cyberfarm-<version>.jar) from a folder instead, to build against a CyberFarm not yet released
     ivy {
@@ -60,6 +62,11 @@ dependencies {
     // JEI is optional: only its API at compile time, for the information page on every hat
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"
+    // ./gradlew runClient -Pcurios tries the addon with Curios
+    if (project.hasProperty('curios')) {
+        runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+    }
     runtimeOnly "org.appliedenergistics:guideme:${guideme_version}"
     runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 }
