@@ -10,7 +10,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.ClientAvatarEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.world.entity.Avatar;
+import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.client.renderstate.AvatarRenderStateModifier;
+import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -24,7 +30,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 
-/** Draws the hat a drone wears. On players vanilla already draws whatever item sits in the head slot. */
+/** Draws the hat a drone wears, and the one in the Hat slot on the player. Vanilla draws one in the helmet slot. */
 @Mod(value = CyberHats.MODID, dist = Dist.CLIENT)
 public class CyberHatsClient {
     private static final ContextKey<ItemStackRenderState> HAT = new ContextKey<>(CyberHats.id("drone_hat"));
@@ -41,9 +47,30 @@ public class CyberHatsClient {
     public CyberHatsClient(IEventBus modBus) {
         modBus.addListener(CyberHatsClient::extractHat);
         modBus.addListener(CyberHatsClient::addHatLayer);
+        NeoForge.EVENT_BUS.addListener(HatSlotWidgets::addTo);
+    }
+
+    /** The hat from the Hat slot (or Curios' head slot) on the player's head, in place of the helmet. */
+    private static void showCosmeticHat(Avatar avatar, AvatarRenderState state) {
+        if (!(avatar instanceof Player player)) {
+            return;
+        }
+        ItemStack hat = HatSlot.ownSlot() ? HatSlot.shownHat(player) : CuriosHats.shownHat(player);
+        if (hat.isEmpty()) {
+            return;
+        }
+        state.headEquipment = ItemStack.EMPTY;
+        state.wornHeadType = null;
+        Minecraft.getInstance().getItemModelResolver().updateForLiving(state.headItem, hat, ItemDisplayContext.HEAD, player);
     }
 
     private static void extractHat(RegisterRenderStateModifiersEvent event) {
+        event.registerAvatarEntityModifier(new AvatarRenderStateModifier() {
+            @Override
+            public <T extends Avatar & ClientAvatarEntity> void accept(T avatar, AvatarRenderState state) {
+                showCosmeticHat(avatar, state);
+            }
+        });
         event.registerEntityModifier(DroneRenderer.class, (DroneEntity drone, DroneRenderState state) -> {
             ItemStack hat = drone.getItemBySlot(EquipmentSlot.HEAD);
             if (!hat.isEmpty()) {

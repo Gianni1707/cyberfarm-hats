@@ -98,8 +98,13 @@ Hats do nothing at all, and look good doing it. **You** can wear one, and so can
 | To | Do this |
 | --- | --- |
 | Wear a hat | Right-click with it in your hand, or put it in your helmet slot |
+| Wear it over a helmet | Put it in the **Hat slot**, right of you in the inventory: it shows in place of the helmet, which still protects you |
+| Hide it for a while | Click the **eye** above the Hat slot |
 | Put a hat on a drone | Right-click the drone with the hat. On a Taxi drone, **sneak** and right-click |
 | Take a hat off a drone | Right-click the drone with **Shears** |
+
+With **Curios** installed there is no Hat slot: hats go in Curios' head slot instead, and Curios' own
+buttons show or hide them.
 
 A drone wears one hat at a time. If you **pick the drone up**, or it is destroyed, its hat drops on the
 ground. Armor stands can wear hats too.

@@ -5,12 +5,15 @@ modId="cyberhats"
 version="${file.jarVersion}"
 displayName="CyberFarm Hats"
 # The drone wearing the straw hat, among a few more hats
-logoFile="cyberhats_logo.png"
-logoBlur=false
+iconFile="cyberhats_logo.png"
 authors="Super17_"
 description='''
 Hats for you and for your CyberFarm drones. Purely cosmetic.
 '''
+
+# Adds the Hat slot to the player's inventory
+[[mixins]]
+config="cyberhats.mixins.json"
 
 [[dependencies.cyberhats]]
     modId="neoforge"
@@ -39,4 +42,13 @@ Hats for you and for your CyberFarm drones. Purely cosmetic.
     type="required"
     versionRange="[1.0.0,)"
     ordering="AFTER"
+    side="BOTH"
+
+# With Curios the hats go in its head slot, and the Hat slot of our own is not added
+[[dependencies.cyberhats]]
+    modId="curios"
+    type="optional"
+    reason="Hats in Curios' head slot instead of the Hat slot"
+    versionRange="*"
+    ordering="NONE"
     side="BOTH"

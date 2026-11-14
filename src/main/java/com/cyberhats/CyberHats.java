@@ -20,6 +20,8 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.TestData;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameType;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
@@ -27,7 +29,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.equipment.Equippable;
 import net.neoforged.bus.api.IEventBus;
@@ -71,18 +76,25 @@ public class CyberHats {
     private static final DeferredRegister<Consumer<GameTestHelper>> TESTS = DeferredRegister.create(Registries.TEST_FUNCTION, MODID);
     private static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHelper>> DRONE_HAT_TEST =
             TESTS.register("drone_hat", () -> CyberHats::testDroneHat);
+    private static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHelper>> HAT_SLOT_TEST =
+            TESTS.register("hat_slot", () -> CyberHats::testHatSlot);
 
     public CyberHats(IEventBus modBus) {
         ITEMS.register(modBus);
         TESTS.register(modBus);
+        HatSlot.register(modBus);
         modBus.addListener((BuildCreativeModeTabContentsEvent event) -> {
             if (event.getTabKey() == ModCreativeTabs.MAIN.getKey()) {
                 HATS.forEach(event::accept);
             }
         });
-        modBus.addListener((RegisterGameTestsEvent event) -> event.registerTest(id("drone_hat"), new FunctionGameTestInstance(
-                DRONE_HAT_TEST.getKey(),
-                new TestData<>(event.registerEnvironment(id("default")), Identifier.withDefaultNamespace("empty"), 20, 0, true))));
+        modBus.addListener((RegisterGameTestsEvent event) -> {
+            var environment = event.registerEnvironment(id("default"));
+            event.registerTest(id("drone_hat"), new FunctionGameTestInstance(DRONE_HAT_TEST.getKey(),
+                    new TestData<>(environment, Identifier.withDefaultNamespace("empty"), 20, 0, true)));
+            event.registerTest(id("hat_slot"), new FunctionGameTestInstance(HAT_SLOT_TEST.getKey(),
+                    new TestData<>(environment, Identifier.withDefaultNamespace("empty"), 20, 0, true)));
+        });
         NeoForge.EVENT_BUS.addListener(CyberHats::dropHat);
     }
 
@@ -114,6 +126,29 @@ public class CyberHats {
                 && drone.getRemovalReason() == Entity.RemovalReason.DISCARDED) {
             drone.dropPreservedEquipment(level);
         }
+    }
+
+    /**
+     * The player's menu has the Hat slot after every vanilla slot; it takes only hats, kept on the player. With Curios
+     * there is no such slot at all.
+     */
+    private static void testHatSlot(GameTestHelper helper) {
+        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+        if (!HatSlot.ownSlot()) {
+            helper.assertTrue(player.inventoryMenu.slots.size() == InventoryMenu.SHIELD_SLOT + 1, "with Curios, no Hat slot");
+            helper.succeed();
+            return;
+        }
+        Slot slot = player.inventoryMenu.getSlot(InventoryMenu.SHIELD_SLOT + 1);
+        helper.assertTrue(slot instanceof HatSlot.Holder, "the Hat slot follows the offhand");
+        ItemStack hat = HATS.getFirst().toStack();
+        helper.assertTrue(slot.mayPlace(hat), "a hat goes in");
+        helper.assertFalse(slot.mayPlace(new ItemStack(Items.IRON_HELMET)), "a helmet does not");
+        slot.set(hat);
+        helper.assertTrue(HatSlot.worn(player).hat().is(hat.getItem()) && !HatSlot.shownHat(player).isEmpty(), "the player wears it, shown");
+        player.setData(HatSlot.WORN, new HatSlot.Worn(hat, false));
+        helper.assertTrue(HatSlot.shownHat(player).isEmpty() && slot.getItem().is(hat.getItem()), "hidden, it stays in the slot");
+        helper.succeed();
     }
 
     private static void testDroneHat(GameTestHelper helper) {
