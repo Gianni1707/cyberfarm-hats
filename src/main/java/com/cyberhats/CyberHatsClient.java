@@ -17,10 +17,18 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 
-/** Draws the hat a drone wears. On players vanilla already draws whatever item sits in the head slot. */
+import java.util.IdentityHashMap;
+import java.util.Map;
+
+import net.minecraft.world.entity.player.Player;
+
+/** Draws the hat a drone wears, and the one in the Hat slot on the player. Vanilla draws one in the helmet slot. */
 public final class CyberHatsClient {
     /**
      * Where the hat's bottom stands, in pixels from the drone body's pivot (y down): on the tank, whose top is at -3,
@@ -34,9 +42,45 @@ public final class CyberHatsClient {
 
     private CyberHatsClient() {}
 
+    /** The helmets taken off for the time a player is drawn with their cosmetic hat. */
+    private static final Map<Player, ItemStack> HELMETS = new IdentityHashMap<>();
+
     static void init(IEventBus modBus) {
         modBus.addListener(CyberHatsClient::addHatLayer);
         MinecraftForge.EVENT_BUS.addListener(CyberHatsClient::hideAntenna);
+        MinecraftForge.EVENT_BUS.addListener(HatSlotWidgets::addTo);
+        // Last of all, so a render another mod cancels never leaves the helmet swapped
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, CyberHatsClient::wearCosmeticHat);
+        MinecraftForge.EVENT_BUS.addListener(CyberHatsClient::restoreHelmet);
+    }
+
+    /** A player's Hat slot, as the server sent it. */
+    static void applySync(int entity, HatSlot.Worn worn) {
+        if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(entity) instanceof Player player) {
+            HatSlot.setWorn(player, worn);
+        }
+    }
+
+    /**
+     * 1.20.1 draws the helmet and a worn head item straight from the player's armor, so for the time the player is drawn
+     * the hat from the Hat slot (or Curios' head slot) takes the helmet's place on this client; the next event puts the
+     * helmet back.
+     */
+    private static void wearCosmeticHat(RenderPlayerEvent.Pre event) {
+        Player player = event.getEntity();
+        ItemStack hat = HatSlot.ownSlot() ? HatSlot.shownHat(player)
+                : ModList.get().isLoaded(CuriosHats.MODID) ? CuriosHats.shownHat(player) : ItemStack.EMPTY;
+        if (!hat.isEmpty()) {
+            HELMETS.put(player, player.getInventory().armor.get(EquipmentSlot.HEAD.getIndex()));
+            player.getInventory().armor.set(EquipmentSlot.HEAD.getIndex(), hat);
+        }
+    }
+
+    private static void restoreHelmet(RenderPlayerEvent.Post event) {
+        ItemStack helmet = HELMETS.remove(event.getEntity());
+        if (helmet != null) {
+            event.getEntity().getInventory().armor.set(EquipmentSlot.HEAD.getIndex(), helmet);
+        }
     }
 
     /** The hat takes the antenna's place. Every drone shares the model, so this is set again before each one is drawn. */

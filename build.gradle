@@ -17,6 +17,8 @@ repositories {
     // Patchouli and JEI, to read the handbook entry and the recipes in the dev client
     mavenCentral()
     maven { url = "https://maven.blamejared.com" }
+    // Curios, optional: with it the hats go in its head slot
+    maven { url = "https://maven.theillusivec4.top/" }
     // CyberFarm, straight from its GitHub releases. -Pcyberfarm_repo=file:///some/folder/ reads the same layout
     // (v<version>/cyberfarm-<version>.jar) from a folder instead, to build against a CyberFarm not yet released
     ivy {
@@ -56,6 +58,12 @@ legacyForge {
     }
 }
 
+// The Hat slot's mixins, with the refmap that maps them to the game's obfuscated names
+mixin {
+    add sourceSets.main, 'cyberhats.refmap.json'
+    config 'cyberhats.mixins.json'
+}
+
 dependencies {
     modImplementation "com.cyberfarm:cyberfarm:${cyberfarm_version}"
     // JEI is optional: only its API at compile time, for the information page on every hat
@@ -63,12 +71,19 @@ dependencies {
     modCompileOnly "mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"
     modRuntimeOnly "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
     modRuntimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    modCompileOnly "top.theillusivec4.curios:curios-forge:${curios_version}:api"
+    // ./gradlew runClient -Pcurios tries the addon with Curios
+    if (project.hasProperty('curios')) {
+        modRuntimeOnly "top.theillusivec4.curios:curios-forge:${curios_version}"
+    }
 }
 
 jar {
     // mods.toml reads the mod version from here
     manifest {
         attributes 'Implementation-Version': project.version
+        attributes 'MixinConfigs': 'cyberhats.mixins.json'
     }
 }
 

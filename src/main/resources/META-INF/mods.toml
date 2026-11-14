@@ -41,3 +41,18 @@ Hats for you and for your CyberFarm drones. Purely cosmetic.
     versionRange="*"
     ordering="NONE"
     side="CLIENT"
+
+# With Curios or Cosmetic Armor Reworked the hats go in their cosmetic slots, and our Hat slot is not added
+[[dependencies.cyberhats]]
+    modId="curios"
+    mandatory=false
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.cyberhats]]
+    modId="cosmeticarmorreworked"
+    mandatory=false
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"

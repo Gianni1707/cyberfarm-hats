@@ -831,6 +831,25 @@ QUOTES = {
 
 # ------------------------------------------------------------------ files
 
+GUI_SPRITES = {
+    # The empty Hat slot, like vanilla's armor slot silhouettes
+    "container/slot/hat": ("................ ................ ....########.... ....########.... ....########.... ....########.... "
+                           "....########.... ....########.... ...##########... ....########.... ..############.. "
+                           ".##############. ..############.. ................ ................ ................",
+                           {"#": (198, 198, 198, 255)}),
+    # The button above it: an open eye shows the hat, a closed one hides it
+    "hat_shown": ("......... ...###... .##WWW##. #WWW#WWW# #WW###WW# #WWW#WWW# .##WWW##. ...###... .........",
+                  {"#": (55, 55, 55, 255), "W": (255, 255, 255, 255)}),
+    "hat_hidden": ("......... ......... ......... #.......# .#######. ..#.#.#.. ......... ......... .........",
+                   {"#": (55, 55, 55, 255)}),
+}
+
+
+def sprite(art, colours):
+    """Pixel art from rows of letters, one per colour; a dot is transparent."""
+    return [[colours.get(char, (0, 0, 0, 0)) for char in line] for line in art.split()]
+
+
 def png(path, rows):
     raw = b"".join(b"\0" + bytes(channel for pixel in row for channel in pixel) for row in rows)
 
@@ -848,16 +867,21 @@ def write(path, data):
 
 
 JEI_INFO = ("A hat, just for looks. Right-click with it or put it in your helmet slot to wear it.\n\n"
+            "Over a helmet, put it in the Hat slot right of you in the inventory (Curios' head slot, with Curios): it shows "
+            "in place of the helmet, which still protects you. The eye above the slot hides it.\n\n"
             "Right-click a CyberFarm drone with it (sneaking, on a Taxi drone) and the drone wears it in place of its "
             "antenna. Shears take it off; a drone you pick up drops its hat.")
 
-# Two book pages: a Patchouli page holds about 250 characters
+# Book pages: a Patchouli page holds about 250 characters
 PATCHOULI_TEXT = ("Hats do nothing at all, and look good doing it. $(l)You$() can wear one, and so can your drones: a drone "
                   "folds its antenna away and wears the hat on its tank, clear of every module.",
                   "$(li)$(l)Wear a hat$(): right-click with it, or put it in your helmet slot.$(br)"
+                  "$(li)$(l)Over a helmet$(): put it in the Hat slot right of you in the inventory. The helmet still "
+                  "protects you; the eye above the slot hides the hat.",
                   "$(li)$(l)On a drone$(): right-click the drone with the hat.$(br)"
                   "$(li)$(l)Take it off$(): right-click the drone with Shears.$(br2)"
-                  "A drone you pick up drops its hat. Armor stands can wear hats too.")
+                  "A drone you pick up drops its hat. Armor stands can wear hats too. With Curios or Cosmetic Armor "
+                  "there is no Hat slot: their cosmetic slots take hats.")
 
 PAGE = """---
 navigation:
@@ -881,8 +905,13 @@ Hats do nothing at all, and look good doing it. **You** can wear one, and so can
 | To | Do this |
 | --- | --- |
 | Wear a hat | Right-click with it in your hand, or put it in your helmet slot |
+| Wear it over a helmet | Put it in the **Hat slot**, right of you in the inventory: it shows in place of the helmet, which still protects you |
+| Hide it for a while | Click the **eye** above the Hat slot |
 | Put a hat on a drone | Right-click the drone with the hat. On a Taxi drone, **sneak** and right-click |
 | Take a hat off a drone | Right-click the drone with **Shears** |
+
+With **Curios** installed there is no Hat slot: hats go in Curios' head slot instead, and Curios' own
+buttons show or hide them.
 
 A drone wears one hat at a time. If you **pick the drone up**, or it is destroyed, its hat drops on the
 ground. Armor stands can wear hats too.
@@ -921,7 +950,16 @@ def main():
         lang[f"item.cyberhats.{hat.name}"] = hat.title
         if hat.name in QUOTES:
             lang[f"item.cyberhats.{hat.name}.quote"] = f'"{QUOTES[hat.name]}"'
-    write(ASSETS / "lang/en_us.json", {**lang, "cyberhats.jei.hat": JEI_INFO})
+    write(ASSETS / "lang/en_us.json", {**lang, "cyberhats.jei.hat": JEI_INFO, "cyberhats.hat_slot.toggle": "Show or hide the hat",
+                                         "cyberhats.hat_slot.hide": "Hide the hat", "cyberhats.hat_slot.show": "Show the hat"})
+    for name, (art, colours) in GUI_SPRITES.items():
+        # 1.20.1 has no GUI sprites: the empty slot's icon lives in the block atlas, the buttons are plain textures
+        path = {"container/slot/hat": "item/empty_hat_slot", "hat_shown": "gui/hat_shown", "hat_hidden": "gui/hat_hidden"}[name]             if LEGACY else f"gui/sprites/{name}"
+        png(ASSETS / f"textures/{path}.png", sprite(art, colours))
+    # With Curios: hats are let into its head slot, and players are given that slot
+    write(DATA.parent / f"curios/tags/{'items' if LEGACY else 'item'}/head.json",
+          {"replace": False, "values": [f"cyberhats:{hat.name}" for hat in HATS]})
+    write(DATA / "curios/entities/hats.json", {"entities": ["minecraft:player"], "slots": ["head"]})
     if LEGACY:
         # CyberFarm's 1.20.1 handbook is a Patchouli book read from resource packs: the entry joins its Drones chapter
         pages = [{"type": "patchouli:text", "text": text} for text in PATCHOULI_TEXT]

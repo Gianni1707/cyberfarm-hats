@@ -10,7 +10,11 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(li)$(l)Wear a hat$(): right-click with it, or put it in your helmet slot.$(br)$(li)$(l)On a drone$(): right-click the drone with the hat.$(br)$(li)$(l)Take it off$(): right-click the drone with Shears.$(br2)A drone you pick up drops its hat. Armor stands can wear hats too."
+      "text": "$(li)$(l)Wear a hat$(): right-click with it, or put it in your helmet slot.$(br)$(li)$(l)Over a helmet$(): put it in the Hat slot right of you in the inventory. The helmet still protects you; the eye above the slot hides the hat."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(l)On a drone$(): right-click the drone with the hat.$(br)$(li)$(l)Take it off$(): right-click the drone with Shears.$(br2)A drone you pick up drops its hat. Armor stands can wear hats too. With Curios or Cosmetic Armor there is no Hat slot: their cosmetic slots take hats."
     },
     {
       "type": "patchouli:crafting",

@@ -67,6 +67,7 @@ public class CyberHats {
         });
         MinecraftForge.EVENT_BUS.addListener(CyberHats::onInteract);
         MinecraftForge.EVENT_BUS.addListener(CyberHats::dropHat);
+        HatSlot.register();
         if (FMLEnvironment.dist == Dist.CLIENT) {
             CyberHatsClient.init(modBus);
         }
