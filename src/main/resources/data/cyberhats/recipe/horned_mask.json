@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "B": "minecraft:bone_block",
+    "W": "minecraft:white_wool"
+  },
+  "pattern": [
+    "B B",
+    "WWW"
+  ],
+  "result": {
+    "id": "cyberhats:horned_mask"
+  }
+}

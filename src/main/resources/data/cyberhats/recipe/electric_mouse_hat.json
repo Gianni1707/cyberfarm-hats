@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "Y": "minecraft:yellow_wool",
+    "R": "minecraft:red_dye"
+  },
+  "pattern": [
+    "Y Y",
+    "YRY"
+  ],
+  "result": {
+    "id": "cyberhats:electric_mouse_hat"
+  }
+}
