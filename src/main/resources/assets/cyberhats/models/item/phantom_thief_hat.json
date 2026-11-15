@@ -5,6 +5,13 @@
     "particle": "cyberhats:item/phantom_thief_hat"
   },
   "display": {
+    "head": {
+      "translation": [
+        0,
+        9.6,
+        0
+      ]
+    },
     "gui": {
       "rotation": [
         30,

@@ -62,7 +62,8 @@ public class CyberHats {
     private static final Set<String> QUOTED = Set.of(
             "red_plumber_cap", "green_plumber_cap", "mushroom_cap", "elf_cap", "straw_hat", "cowboy_hat", "baseball_cap",
             "flat_cap", "fedora", "fez", "party_hat", "halo", "chicken_hat", "professor_top_hat", "apprentice_cap",
-            "phantom_thief_hat", "trainer_cap", "black_mage_hat");
+            "phantom_thief_hat", "trainer_cap", "black_mage_hat", "electric_mouse_hat", "sea_otter_hat", "sleepy_giant_hat",
+            "pink_puffball_hat", "blue_slime_hat", "reindeer_doctor_hat");
     /** Every hat. A new one needs its name here and its boxes in tools/hats.py, which writes all its files. */
     public static final List<DeferredItem<Item>> HATS = Stream.of(
             "hard_hat", "wizard_hat", "flat_cap", "straw_hat", "elf_cap", "cowboy_hat", "baseball_cap", "top_hat", "goggle_top_hat",
@@ -70,7 +71,8 @@ public class CyberHats {
             "pirate_hat", "sombrero", "fedora", "beret", "ushanka", "graduation_cap", "jester_hat", "party_hat", "witch_hat",
             "fez", "mushroom_cap", "halo", "samurai_helmet", "aviator_cap", "captain_hat", "frog_hat", "chicken_hat",
             "professor_top_hat", "time_traveler_top_hat", "phantom_thief_hat", "apprentice_cap", "trainer_cap", "wanderer_hat",
-            "black_mage_hat")
+            "black_mage_hat", "electric_mouse_hat", "sea_otter_hat", "sleepy_giant_hat", "pink_puffball_hat", "blue_slime_hat",
+            "reindeer_doctor_hat", "forest_spirit_hat", "horned_mask")
             .map(CyberHats::hat).toList();
 
     private static final DeferredRegister<Consumer<GameTestHelper>> TESTS = DeferredRegister.create(Registries.TEST_FUNCTION, MODID);

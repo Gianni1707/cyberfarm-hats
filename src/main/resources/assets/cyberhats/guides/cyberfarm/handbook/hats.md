@@ -45,6 +45,14 @@ item_ids:
   - cyberhats:trainer_cap
   - cyberhats:wanderer_hat
   - cyberhats:black_mage_hat
+  - cyberhats:electric_mouse_hat
+  - cyberhats:sea_otter_hat
+  - cyberhats:sleepy_giant_hat
+  - cyberhats:pink_puffball_hat
+  - cyberhats:blue_slime_hat
+  - cyberhats:reindeer_doctor_hat
+  - cyberhats:forest_spirit_hat
+  - cyberhats:horned_mask
 ---
 
 # Hats
@@ -90,10 +98,21 @@ item_ids:
   <ItemIcon id="cyberhats:trainer_cap" />
   <ItemIcon id="cyberhats:wanderer_hat" />
   <ItemIcon id="cyberhats:black_mage_hat" />
+  <ItemIcon id="cyberhats:electric_mouse_hat" />
+  <ItemIcon id="cyberhats:sea_otter_hat" />
+  <ItemIcon id="cyberhats:sleepy_giant_hat" />
+  <ItemIcon id="cyberhats:pink_puffball_hat" />
+  <ItemIcon id="cyberhats:blue_slime_hat" />
+  <ItemIcon id="cyberhats:reindeer_doctor_hat" />
+  <ItemIcon id="cyberhats:forest_spirit_hat" />
+  <ItemIcon id="cyberhats:horned_mask" />
 </ItemGrid>
 
 Hats do nothing at all, and look good doing it. **You** can wear one, and so can your
 [drones](cyberfarm:drones.md): a drone folds its antenna away and wears the hat on its tank, clear of every module.
+
+Some hats move: the propeller spins, tassels and floppy tips sway, the jester's points jiggle, the halo floats and
+turns, the frog blinks and the chicken pecks.
 
 | To | Do this |
 | --- | --- |
@@ -151,3 +170,11 @@ ground. Armor stands can wear hats too.
 <RecipeFor id="cyberhats:trainer_cap" />
 <RecipeFor id="cyberhats:wanderer_hat" />
 <RecipeFor id="cyberhats:black_mage_hat" />
+<RecipeFor id="cyberhats:electric_mouse_hat" />
+<RecipeFor id="cyberhats:sea_otter_hat" />
+<RecipeFor id="cyberhats:sleepy_giant_hat" />
+<RecipeFor id="cyberhats:pink_puffball_hat" />
+<RecipeFor id="cyberhats:blue_slime_hat" />
+<RecipeFor id="cyberhats:reindeer_doctor_hat" />
+<RecipeFor id="cyberhats:forest_spirit_hat" />
+<RecipeFor id="cyberhats:horned_mask" />
