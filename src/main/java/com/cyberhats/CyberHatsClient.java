@@ -28,6 +28,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 
 /** Draws the hat a drone wears, and the one in the Hat slot on the player. Vanilla draws one in the helmet slot. */
@@ -52,6 +53,7 @@ public class CyberHatsClient {
     public CyberHatsClient(IEventBus modBus) {
         modBus.addListener(CyberHatsClient::extractHat);
         modBus.addListener(CyberHatsClient::addHatLayer);
+        modBus.addListener((RegisterSpecialModelRendererEvent event) -> event.register(HatParts.TYPE, HatParts.Unbaked.MAP_CODEC));
         NeoForge.EVENT_BUS.addListener(HatSlotWidgets::addTo);
     }
 
