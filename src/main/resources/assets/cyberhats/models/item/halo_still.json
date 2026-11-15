@@ -1,0 +1,7 @@
+{
+  "textures": {
+    "hat": "cyberhats:item/halo",
+    "particle": "cyberhats:item/halo"
+  },
+  "elements": []
+}

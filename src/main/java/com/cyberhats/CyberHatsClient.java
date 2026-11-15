@@ -47,6 +47,8 @@ public final class CyberHatsClient {
 
     static void init(IEventBus modBus) {
         modBus.addListener(CyberHatsClient::addHatLayer);
+        modBus.addListener(HatRenderer::registerStillModels);
+        modBus.addListener(HatRenderer::registerReload);
         MinecraftForge.EVENT_BUS.addListener(CyberHatsClient::hideAntenna);
         MinecraftForge.EVENT_BUS.addListener(HatSlotWidgets::addTo);
         // Last of all, so a render another mod cancels never leaves the helmet swapped

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "B": {
+      "item": "minecraft:blue_wool"
+    },
+    "S": {
+      "item": "minecraft:slime_ball"
+    }
+  },
+  "pattern": [
+    "BSB",
+    "BBB"
+  ],
+  "result": {
+    "item": "cyberhats:blue_slime_hat"
+  }
+}

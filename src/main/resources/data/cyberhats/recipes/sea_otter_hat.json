@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "B": {
+      "item": "minecraft:blue_wool"
+    },
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+    "S": {
+      "item": "minecraft:nautilus_shell"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "WSW"
+  ],
+  "result": {
+    "item": "cyberhats:sea_otter_hat"
+  }
+}

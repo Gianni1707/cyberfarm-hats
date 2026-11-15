@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Hats do nothing at all, and look good doing it. $(l)You$() can wear one, and so can your drones: a drone folds its antenna away and wears the hat on its tank, clear of every module."
+      "text": "Hats do nothing at all, and look good doing it. $(l)You$() can wear one, and so can your drones: a drone folds its antenna away and wears the hat on its tank, clear of every module.$(br2)Some hats move: the propeller spins, tassels and tips sway, the halo floats."
     },
     {
       "type": "patchouli:text",
@@ -115,6 +115,26 @@
       "type": "patchouli:crafting",
       "recipe": "cyberhats:wanderer_hat",
       "recipe2": "cyberhats:black_mage_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:electric_mouse_hat",
+      "recipe2": "cyberhats:sea_otter_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:sleepy_giant_hat",
+      "recipe2": "cyberhats:pink_puffball_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:blue_slime_hat",
+      "recipe2": "cyberhats:reindeer_doctor_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "cyberhats:forest_spirit_hat",
+      "recipe2": "cyberhats:horned_mask"
     }
   ]
 }

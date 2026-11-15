@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "P": {
+      "item": "minecraft:pink_wool"
+    },
+    "W": {
+      "item": "minecraft:white_wool"
+    }
+  },
+  "pattern": [
+    "PPP",
+    "PWP"
+  ],
+  "result": {
+    "item": "cyberhats:reindeer_doctor_hat"
+  }
+}

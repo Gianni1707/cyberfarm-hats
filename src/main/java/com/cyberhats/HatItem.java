@@ -1,10 +1,13 @@
 package com.cyberhats;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -35,6 +38,17 @@ public class HatItem extends Item implements Equipable {
     @Override
     public SoundEvent getEquipSound() {
         return SoundEvents.ARMOR_EQUIP_LEATHER;
+    }
+
+    /** Hats with moving parts are drawn by HatRenderer; for the others it is never asked (their model is not builtin/entity). */
+    @Override
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(new IClientItemExtensions() {
+            @Override
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return HatRenderer.get();
+            }
+        });
     }
 
     @Override

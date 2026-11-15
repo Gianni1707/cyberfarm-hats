@@ -1,0 +1,119 @@
+{
+  "parent": "builtin/entity",
+  "gui_light": "side",
+  "textures": {
+    "hat": "cyberhats:item/forest_spirit_hat",
+    "particle": "cyberhats:item/forest_spirit_hat"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.375,
+        0.375,
+        0.375
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.25,
+        0.25,
+        0.25
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        9.6,
+        0
+      ]
+    },
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0.71,
+        0
+      ],
+      "scale": [
+        0.583,
+        0.583,
+        0.583
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        -30,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        0.57,
+        0
+      ],
+      "scale": [
+        0.466,
+        0.466,
+        0.466
+      ]
+    }
+  }
+}

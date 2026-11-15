@@ -1,0 +1,119 @@
+{
+  "parent": "builtin/entity",
+  "gui_light": "side",
+  "textures": {
+    "hat": "cyberhats:item/electric_mouse_hat",
+    "particle": "cyberhats:item/electric_mouse_hat"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.375,
+        0.375,
+        0.375
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.25,
+        0.25,
+        0.25
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        9.6,
+        0
+      ]
+    },
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0.06,
+        0
+      ],
+      "scale": [
+        0.49,
+        0.49,
+        0.49
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        -30,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        0.05,
+        0
+      ],
+      "scale": [
+        0.392,
+        0.392,
+        0.392
+      ]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "T": {
+      "item": "minecraft:cyan_wool"
+    },
+    "C": {
+      "item": "minecraft:cake"
+    }
+  },
+  "pattern": [
+    "TTT",
+    "TCT"
+  ],
+  "result": {
+    "item": "cyberhats:sleepy_giant_hat"
+  }
+}
