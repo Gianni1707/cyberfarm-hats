@@ -365,6 +365,15 @@ def moved(point, pivot, motions, t):
     return (x + pivot[0], y + pivot[1], z + pivot[2])
 
 
+# What a hat model inherits from minecraft:block/block for the hand and the ground; a 1.20.1 moving hat has to say it
+BLOCK_DISPLAY = {
+    "thirdperson_righthand": {"rotation": [75, 45, 0], "translation": [0, 2.5, 0], "scale": [0.375, 0.375, 0.375]},
+    "firstperson_righthand": {"rotation": [0, 45, 0], "translation": [0, 0, 0], "scale": [0.4, 0.4, 0.4]},
+    "firstperson_lefthand": {"rotation": [0, 225, 0], "translation": [0, 0, 0], "scale": [0.4, 0.4, 0.4]},
+    "ground": {"rotation": [0, 0, 0], "translation": [0, 3, 0], "scale": [0.25, 0.25, 0.25]},
+}
+
+
 def parts_data(hat):
     """A hat's moving parts as the game reads them: pivot, motions and quads, and whether they glow."""
     return [{"pivot": list(pivot), "bright": part in hat.bright, "quads": hat.quads[part],
@@ -1250,14 +1259,20 @@ def main():
         # In a slot: as large as fits, the way a block is shown, and centred on the hat's own middle
         scale = round(min(0.72, 0.625 * 16 / max(high[0] - low[0], high[2] - low[2], (high[1] - low[1]) * 1.3)), 3)
         lift = round(0.866 * scale * (8 - (low[1] + high[1]) / 2), 2)
-        write(ASSETS / f"models/item/{hat.name}.json", {
-            "parent": "cyberhats:item/hat",
-            "textures": {"hat": f"cyberhats:item/{hat.name}", "particle": f"cyberhats:item/{hat.name}"},
-            "display": {"head": {"translation": [0, WRAP_TRANSLATION if hat.wraps else PERCH_TRANSLATION, 0]},
-                        "gui": {"rotation": [30, 225, 0], "translation": [0, lift, 0], "scale": [scale] * 3},
-                        # In an item frame: the same three-quarter view, turned for a frame that faces the viewer
-                        "fixed": {"rotation": [-30, 45, 0], "translation": [0, round(lift * 0.8, 2), 0], "scale": [round(scale * 0.8, 3)] * 3}},
-            "elements": elements})
+        textures = {"hat": f"cyberhats:item/{hat.name}", "particle": f"cyberhats:item/{hat.name}"}
+        display = {"head": {"translation": [0, WRAP_TRANSLATION if hat.wraps else PERCH_TRANSLATION, 0]},
+                   "gui": {"rotation": [30, 225, 0], "translation": [0, lift, 0], "scale": [scale] * 3},
+                   # In an item frame: the same three-quarter view, turned for a frame that faces the viewer
+                   "fixed": {"rotation": [-30, 45, 0], "translation": [0, round(lift * 0.8, 2), 0], "scale": [round(scale * 0.8, 3)] * 3}}
+        if LEGACY and hat.motions:
+            # 1.20.1 has no special item models: its own renderer (HatRenderer.java) draws the still model, kept
+            # apart, and the moving parts over it, wherever the hat shows
+            write(ASSETS / f"models/item/{hat.name}.json", {"parent": "builtin/entity", "gui_light": "side", "textures": textures,
+                                                          "display": {**BLOCK_DISPLAY, **display}})
+            write(ASSETS / f"models/item/{hat.name}_still.json", {"textures": textures, "elements": elements})
+        else:
+            write(ASSETS / f"models/item/{hat.name}.json", {"parent": "cyberhats:item/hat", "textures": textures,
+                                                          "display": display, "elements": elements})
         if LEGACY:
             write(DATA / f"recipes/{hat.name}.json", legacy_recipe(hat))
         else:
@@ -1268,9 +1283,9 @@ def main():
                     "type": "minecraft:special", "base": f"cyberhats:item/{hat.name}",
                     "model": {"type": "cyberhats:hat_parts", "texture": f"cyberhats:textures/item/{hat.name}.png", "parts": parts_data(hat)}}]}
             write(ASSETS / f"items/{hat.name}.json", {"model": model})
+            write(DATA / f"recipe/{hat.name}.json", {**hat.recipe, "result": {"id": f"cyberhats:{hat.name}"}})
         if LEGACY and hat.motions:
             write(ASSETS / f"hat_parts/{hat.name}.json", {"parts": parts_data(hat)})
-            write(DATA / f"recipe/{hat.name}.json", {**hat.recipe, "result": {"id": f"cyberhats:{hat.name}"}})
     lang = {}
     for hat in HATS:
         lang[f"item.cyberhats.{hat.name}"] = hat.title

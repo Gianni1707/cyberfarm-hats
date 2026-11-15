@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "G": "minecraft:gray_wool",
+    "W": "minecraft:white_wool"
+  },
+  "pattern": [
+    "G G",
+    "GGG",
+    "GWG"
+  ],
+  "result": {
+    "id": "cyberhats:forest_spirit_hat"
+  }
+}
